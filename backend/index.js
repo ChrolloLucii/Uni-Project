@@ -14,7 +14,7 @@ app.use(json());
  *
  * @module routes/myRoutes
  */
-import myRoutes from './routes/myRoutes';
+import myRoutes from './routes/myRoutes.js';
 
 app.use('/api', myRoutes);
 

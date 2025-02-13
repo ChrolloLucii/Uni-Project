@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+import {getUser} from '../controllers/userController.js';
 const router = express.Router();
 /**
  * 
@@ -22,9 +23,8 @@ const router = express.Router();
  * // Удаление пользователя:
  * userController.deleteUser(newUser.id);
  */
-const userController = require('../controllers/userController');
 
-router.get('/user:id', userController.getUser);
+router.get('/user/:id', getUser);
 
-module.exports = router;
+export default router;
 
