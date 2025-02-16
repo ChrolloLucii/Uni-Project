@@ -10,6 +10,7 @@ class User {
         this.nickname = nickname;
     }
 
+    
     updateRole(role){
         this.role = role;
     }
