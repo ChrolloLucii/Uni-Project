@@ -1,4 +1,4 @@
-function validateTournamentData(data) {
+export function validateTournamentData(data) {
 	const errors = []
 
 	if (!data.name) errors.push('Название турнира обязательно.')
@@ -22,5 +22,3 @@ function validateTournamentData(data) {
 
 	return errors
 }
-
-module.exports = { validateTournamentData }
