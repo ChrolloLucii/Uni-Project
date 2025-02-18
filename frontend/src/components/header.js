@@ -11,6 +11,13 @@ export default function Header(){return(
         />
         <h2 className="text-2xl font-semibold text-white col-start-4 col-span-2 mx-auto">Турнирны</h2>
         <h2 className="text-2xl font-semibold text-white col-start-8 col-span-2 mx-auto">Девлог</h2>
+        <Image className="col-start-12"
+        aria-hidden
+        src="./logo.svg"
+        alt="Window icon"
+        width={49}
+        height={49}
+        />
     </nav>
     </header>
 )}
