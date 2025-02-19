@@ -5,7 +5,7 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
-        "test": "jest"
+        "test": "jest -- experimental-vm-modules"
     },
     "dependencies": {
         "body-parser": "^1.20.3",
