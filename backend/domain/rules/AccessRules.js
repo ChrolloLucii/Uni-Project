@@ -9,7 +9,7 @@ class AccessRules {
         [Permission.MANAGE_MATCHES]: true,
         [Permission.VIEW_TOURNAMENTS]: true,
         [Permission.MANAGE_TOURNAMENTS]: true,
-        [Permission.MANAGE_JUDJES]: true
+        [Permission.MANAGE_JUDGES]: true
     };
     [Role.JUDGE] = {
         [Permission.MANAGE_MATCHES]: true,
@@ -17,7 +17,7 @@ class AccessRules {
         [Permission.MANAGE_USERS]: true,
         [Permission.VIEW_TOURNAMENTS]: true,
         [Permission.MANAGE_TOURNAMENTS]: true,
-        [Permission.MANAGE_JUDJES]: false
+        [Permission.MANAGE_JUDGES]: false
     };
     [Role.CAPTAIN] = {
         [Permission.MANAGE_MATCHES]: false,
@@ -25,7 +25,7 @@ class AccessRules {
         [Permission.MANAGE_USERS]: false,
         [Permission.VIEW_TOURNAMENTS]: true,
         [Permission.MANAGE_TOURNAMENTS]: false,
-        [Permission.MANAGE_JUDJES]: false
+        [Permission.MANAGE_JUDGES]: false
     };
 
     [Role.PLAYER] = {
@@ -34,7 +34,7 @@ class AccessRules {
         [Permission.MANAGE_USERS]: false,
         [Permission.VIEW_TOURNAMENTS]: true,
         [Permission.MANAGE_TOURNAMENTS]: false,
-        [Permission.MANAGE_JUDJES]: false
+        [Permission.MANAGE_JUDGES]: false
     };
 }
 export default AccessRules;

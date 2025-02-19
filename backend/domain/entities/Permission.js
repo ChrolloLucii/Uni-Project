@@ -1,5 +1,5 @@
 class Permissions{
-    static MANAGE_JUDJES = 'MANAGE_JUDJES';
+    static MANAGE_JUDGES = 'MANAGE_JUDGES';
     static MANAGE_USERS = 'MANAGE_USERS';
     static MANAGE_TEAMS = 'MANAGE_TEAMS';
     static MANAGE_MATCHES = 'MANAGE_MATCHES';
