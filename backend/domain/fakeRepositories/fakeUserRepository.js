@@ -1,6 +1,6 @@
 class FakeUserRepository{
-    constuctor () {
-        this.users = Map();
+    constructor () {
+        this.users = new Map();
     }
     async create(user){
         this.users.set(user.id, user);
@@ -27,3 +27,4 @@ class FakeUserRepository{
         return this.users.delete(user.id);
     }
 }
+export default FakeUserRepository;

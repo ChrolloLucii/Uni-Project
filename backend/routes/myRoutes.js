@@ -1,6 +1,6 @@
-import express from 'express';
-import {getUser} from '../controllers/userController.js';
-const router = express.Router();
+import {Router} from 'express';
+import userRouter from './userRoute.js';
+const Myroutes = Router();
 /**
  * 
  * Пример
@@ -24,7 +24,8 @@ const router = express.Router();
  * userController.deleteUser(newUser.id);
  */
 
-router.get('/user/:id', getUser);
+Myroutes.get('/users',userRouter);
 
-export default router;
+
+export default Myroutes;
 

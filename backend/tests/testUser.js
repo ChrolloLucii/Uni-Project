@@ -1,4 +1,4 @@
-import UserFactory from '../domain/factories/UserFactory.js';
+import UserFactory from '../domain/Factories/UserFactory.js';
 
 // Создаем фабрику
 const factory = new UserFactory();

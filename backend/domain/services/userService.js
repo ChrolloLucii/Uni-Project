@@ -3,8 +3,8 @@
 // Сервис использует фабрику для создания пользователя и --> обращается к репозиторию для сохранения данных
 
 
-import UserFactory from "../Factories/UserFactory";
-import UserRepositoryInterface from "../repositories/userRepositoryInterface";
+import UserFactory from "../Factories/UserFactory.js";
+//import UserRepositoryInterface from "../repositories/userRepositoryInterface";
 
 
 class UserService {
