@@ -4,10 +4,10 @@
 
 
 import UserFactory from "../Factories/UserFactory";
-import UserRepositoryInterface from "../repositories/userRepository";
+import UserRepositoryInterface from "../repositories/userRepositoryInterface";
 
 
-class userService {
+class UserService {
     constructor(userRepository){
         this.userRepository = userRepository;
     }
