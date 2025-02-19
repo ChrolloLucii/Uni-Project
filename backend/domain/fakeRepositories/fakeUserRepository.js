@@ -23,7 +23,7 @@ class FakeUserRepository{
         return user;
     }
     }
-    async delete() {
+    async delete(user) {
         return this.users.delete(user.id);
     }
 }

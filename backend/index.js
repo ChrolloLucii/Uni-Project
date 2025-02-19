@@ -1,8 +1,11 @@
-import express, { json } from 'express';
+import express from 'express';
+import myRoutes from './routes/myRoutes.js';
+
+import bodyParser from 'body-parser';
 const app = express();
 const port = process.env.PORT || 4000;
 
-app.use(json());
+app.use(bodyParser.json());
 
 /**
  * Модуль маршрутов.
@@ -14,7 +17,7 @@ app.use(json());
  *
  * @module routes/myRoutes
  */
-import myRoutes from './routes/myRoutes.js';
+
 
 app.use('/api', myRoutes);
 

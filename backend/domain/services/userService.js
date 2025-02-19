@@ -10,10 +10,11 @@ import UserFactory from "../Factories/UserFactory.js";
 class UserService {
     constructor(userRepository){
         this.userRepository = userRepository;
+        this.userFactory = new UserFactory();
     }
     async registerUser({id, nickname, role}){
-        const user = UserFactory.createUser({id, nickname, role});
-        return await this.userRepository.createUser(user);
+        const user = this.userFactory.createUser({id, nickname, role});
+        return await this.userRepository.create(user);
 
     }
     async getUserById(id) {

@@ -1,6 +1,6 @@
-import {Router} from 'express';
+import express from 'express';
 import userController from '../controllers/userController.js';
-const userRouter = Router();
+const userRouter = express.Router();
 
 // Маршрут для регистрации нового пользователя
 userRouter.post('/', userController.registration);
