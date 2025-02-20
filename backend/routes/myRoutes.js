@@ -1,5 +1,6 @@
 import express from 'express';
 import userRouter from './userRoute.js';
+import authRouter from './authRoute.js';
 const Myroutes = express.Router();
 /**
  * 
@@ -25,7 +26,7 @@ const Myroutes = express.Router();
  */
 
 Myroutes.use('/users',userRouter);
-
+Myroutes.use('/auth', authRouter);
 
 export default Myroutes;
 
