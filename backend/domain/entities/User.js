@@ -1,29 +1,36 @@
-class User { 
-    constructor( id, role, nickname, teamId) {
-        this.id = id;
-        this.role = role;
-        this.nickname = nickname;
-        this.teamId = teamId;
-    }
+import AccessRules from '../rules/AccessRules.js';
+import Permission from './Permission.js';
 
-    updateName(nickname){
-        this.nickname = nickname;
-    }
+class User {
+  constructor(id, nickname, role) {
+    this.id = id;
+    this.nickname = nickname;
+    this.role = role;
+  }
 
-    
-    updateRole(role){
-        this.role = role;
-    }
-    getInfo() {
-        return {
-            id: this.id,
-            role : this.role,
-            nickname:  this.nickname,
-            teamId: this.teamId
-    }
-}
-    isCaptainOf(teamId) {
-        return this.role === 'CAPTAIN' && this.teamId === teamId;
-    }
+  hasPermission(permission) {
+    return AccessRules[this.role]?.includes(permission) || false;
+  }
+  canManageUsers() {
+    return this.hasPermission(Permission.MANAGE_USERS);
+  }
+  canManageTournaments() {
+    return this.hasPermission(Permission.MANAGE_TOURNAMENTS);
+  }
+  canManageJudges() {
+    return this.hasPermission(Permission.MANAGE_JUDGES);
+  }
+
+  canManageTeams() {
+    return this.hasPermission(Permission.MANAGE_TEAMS);
+  }
+  
+  canManageMatches() {
+    return this.hasPermission(Permission.MANAGE_MATCHES);
+  }
+
+  canViewTournaments() {
+    return this.hasPermission(Permission.VIEW_TOURNAMENTS);
+  }
 }
 export default User;
