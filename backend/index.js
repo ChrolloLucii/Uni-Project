@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 
 app.use('/api', myRoutes);
-app.use('/teams', teamRouter)
+
 app.listen(port, () =>{
     console.log("Server is running on port " + port);
 })

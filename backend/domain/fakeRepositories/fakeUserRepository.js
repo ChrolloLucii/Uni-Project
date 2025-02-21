@@ -1,6 +1,14 @@
 class FakeUserRepository{
     constructor () {
         this.users = new Map();
+        const superUser = {
+            'id' : 1,
+            nickname : 'organizer',
+            role : 'ORGANIZER',
+            username : 'user88',
+            password : 'securepassword' // должен быть зашифрен
+        };
+        this.users.set(superUser.id, superUser);
     }
     async create(user){
         this.users.set(user.id, user);
@@ -10,7 +18,7 @@ class FakeUserRepository{
         return this.users.get(id);
     }
 
-    findAll(){
+    async findAll(){
         return Array.from(this.users.values());
     }
 
