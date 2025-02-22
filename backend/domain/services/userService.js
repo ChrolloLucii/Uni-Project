@@ -3,7 +3,7 @@
 // Сервис использует фабрику для создания пользователя и --> обращается к репозиторию для сохранения данных
 
 
-import UserFactory from "../Factories/UserFactory.js";
+import UserFactory from "../Factories/UserFactory.js"; // импорт фабрики для создания пользователя
 //import UserRepositoryInterface from "../repositories/userRepositoryInterface";
 
 

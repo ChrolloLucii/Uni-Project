@@ -1,5 +1,6 @@
 import express from 'express';
 import myRoutes from './routes/myRoutes.js';
+import teamRouter from './routes/teamRoutes.js';
 
 import bodyParser from 'body-parser';
 const app = express();
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 
 app.use('/api', myRoutes);
+
 app.listen(port, () =>{
     console.log("Server is running on port " + port);
 })
