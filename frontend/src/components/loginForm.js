@@ -28,9 +28,14 @@ export default function LoginForm({onLogin}){
             setError('Что-то пошло не так');
             console.log(err);
         }
-
+        
     };
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.location.reload();
+    }
     return(
+        <div>
         <form onSubmit = {handleSubmit}>
             <div>
                 <label>
@@ -54,6 +59,9 @@ export default function LoginForm({onLogin}){
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <button type ="submit">Login</button>
+
         </form>
+        <button onClick = {handleLogout}>Logout</button>
+        </div>
     );
 }

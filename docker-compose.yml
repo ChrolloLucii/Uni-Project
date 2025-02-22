@@ -3,7 +3,7 @@ services:
     build: /backend
     image: backend
     ports:
-      - "9000:9000"
+      - "4000:4000"
   frontend:
     build: /frontend
     ports:

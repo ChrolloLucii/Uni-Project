@@ -3,7 +3,7 @@ import {NextResponse} from 'next/server';
 export async function POST(request) {
     try {
         const authPayload = await request.json();
-        const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000';
+        const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000' || 'htpp:/example:4000';
         const response = await fetch(`${backendUrl}/auth/login/`, {
             method: 'POST',
             headers: {
