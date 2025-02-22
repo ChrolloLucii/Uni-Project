@@ -25,8 +25,7 @@ const Myroutes = express.Router();
  * userController.deleteUser(newUser.id);
  */
 
-Myroutes.use('/users',userRouter);
-Myroutes.use('/teams',teamRouter)
+Myroutes.use('/teams',teamRouter);
 
 export default Myroutes;
 
