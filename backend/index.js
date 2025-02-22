@@ -1,11 +1,14 @@
 import express from 'express';
 import myRoutes from './routes/myRoutes.js';
 import teamRouter from './routes/teamRoutes.js';
-
+import userRouter from './routes/userRoute.js';
 import bodyParser from 'body-parser';
+
+import cors from 'cors';
+
 const app = express();
 const port = process.env.PORT || 4000;
-
+app.use(cors());
 app.use(bodyParser.json());
 
 /**
@@ -21,7 +24,7 @@ app.use(bodyParser.json());
 
 
 app.use('/api', myRoutes);
-
+app.use('/auth', userRouter);
 app.listen(port, () =>{
     console.log("Server is running on port " + port);
 })
