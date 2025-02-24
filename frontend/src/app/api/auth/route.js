@@ -18,8 +18,15 @@ export async function POST(request) {
         if (!response.ok) {
             return NextResponse.json(data, {status: response.status});
         }
-        return NextResponse.json(data);
-    }
+        const res = NextResponse.json(data);
+        res.cookies.set('token', data.token, {
+            //Добавить secure 
+            httpOnly: true,
+            path: '/',
+            maxAge : 60*60
+    });
+    return res;
+}
     catch (error){ 
         return NextResponse.json({error: error.message}, {status: 500});
     }

@@ -30,9 +30,14 @@ export default function LoginForm({onLogin}){
         }
         
     };
+
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.reload();
+        const res = fetch('api/logout/', {
+            method: 'POST',
+        });
+        res.then(() => {
+            onLogin(null);
+        })
     }
     return(
         <div>
