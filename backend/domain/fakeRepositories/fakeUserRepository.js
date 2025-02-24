@@ -6,7 +6,8 @@ class FakeUserRepository{
             nickname : 'organizer',
             role : 'ORGANIZER',
             username : 'user88',
-            password : 'securepassword' // должен быть зашифрен
+            password : 'securepassword', // должен быть зашифрен
+            email : null
         };
         this.users.set(superUser.id, superUser);
     }

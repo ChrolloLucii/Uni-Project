@@ -12,8 +12,8 @@ class UserService {
         this.userRepository = userRepository;
         this.userFactory = new UserFactory();
     }
-    async registerUser({id, nickname, role}){
-        const user = this.userFactory.createUser({id, nickname, role});
+    async registerUser({id, role, nickname, username, password, email}){
+        const user = this.userFactory.createUser({id, role, nickname, username, password, email});
         return await this.userRepository.create(user);
 
     }

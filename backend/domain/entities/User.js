@@ -2,10 +2,13 @@ import AccessRules from '../rules/AccessRules.js';
 import Permission from './Permission.js';
 
 class User {
-  constructor(id, nickname, role) {
+  constructor(id, role, nickname, username, password, email) {
     this.id = id;
     this.nickname = nickname;
     this.role = role;
+    this.username= username;
+    this.password = password
+    this.email = email;
   }
 
   hasPermission(permission) {
