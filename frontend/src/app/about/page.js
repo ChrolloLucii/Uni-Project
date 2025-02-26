@@ -13,6 +13,7 @@ export default function InviteRegistration(){
     nickname: '',
     email: '',
   });
+  
   const [error, setError] = useState('');
 
 
