@@ -1,8 +1,9 @@
+// backend/controllers/teamController.js
 import TeamService from '../domain/services/teamService.js'
-import FakeTeamRepository from '../domain/fakeRepositories/fakeTeamRepository.js'
+import TeamRepositoryImpl from '../infrastructure/repositories/TeamRepositoryImpl.js'
 
-const repository = new FakeTeamRepository() // Создаем экземпляр репозитория для команд
-const teamService = new TeamService(repository) // Создаем экземпляр сервиса для команд
+const repository = new TeamRepositoryImpl()
+const teamService = new TeamService(repository)
 
 export default {
 	async registration(req, res) {
@@ -15,13 +16,13 @@ export default {
 				players,
 				captainIndex,
 			})
-			return res.status(201).json(team) // Отправляем созданную команду
+			return res.status(201).json(team)
 		} catch (error) {
 			res.status(400).json({ message: error.message })
 		}
 	},
-
-	async getTeamById(req, res) { // Метод getTeamById возвращает команду по id
+   // реализация метода getTeamById
+	async getTeamById(req, res) {
 		try {
 			const { id } = req.params
 			const team = await teamService.getTeamById(Number(id))
@@ -35,7 +36,7 @@ export default {
 		}
 	},
 
-	async getAllTeams(req, res) { // Метод getAllTeams возвращает массив всех команд
+	async getAllTeams(req, res) {
 		try {
 			const teams = await teamService.getAllTeams()
 			res.status(200).json(teams)
@@ -44,7 +45,7 @@ export default {
 		}
 	},
 
-	async updateTeam(req, res) { // Метод updateTeam обновляет команду
+	async updateTeam(req, res) {
 		try {
 			const teamData = req.body
 			const updatedTeam = await teamService.updateTeam(teamData)
