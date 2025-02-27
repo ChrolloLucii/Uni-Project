@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import fakeUserRepository from '../domain/fakeRepositories/fakeUserRepository.js';
-const secretKey = '12341234'
+import repository from '../domain/fakeRepositories/singletonRepo.js';
 
-const repository = new fakeUserRepository();
+const secretKey = '12341234'
 
 const login = async (username, password) => {
 
