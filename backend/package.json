@@ -5,7 +5,7 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
-        "test": "jest -- experimental-vm-modules"
+        "test": "jest"
     },
     "dependencies": {
         "body-parser": "^1.20.3",
@@ -21,8 +21,11 @@
         "ws": "^8.18.0"
     },
     "devDependencies": {
+        "@babel/core": "^7.26.9",
+        "@babel/preset-env": "^7.26.9",
         "@types/express": "^5.0.0",
         "@types/node": "^22.13.4",
+        "babel-jest": "^29.7.0",
         "jest": "^29.6.1",
         "nodemon": "^3.1.9",
         "ts-node": "^10.9.2"

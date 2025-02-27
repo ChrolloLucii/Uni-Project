@@ -1,4 +1,3 @@
-
 import TeamRepository from '../../domain/repositories/TeamRepository.js'
 import TeamModel from '../models/teamModel.js'
 
