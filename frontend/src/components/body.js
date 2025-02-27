@@ -1,17 +1,34 @@
-export default function Body(){return(
-    
-    <div className="grid grid-rows-10 gap-y-6 grid-cols-12 gap-6 px-[18%] bg-[#0B0B0B] min-h-screen text-white z-10 bg-clip-content">      
-        < div className="text-2xl text-[#FF8D0A] col-start-2 col-span-3 row-start-2 flex items-center h-[5vh]">
-            Активные турниры
+import CreateTournamentButton from "./CreateTournamentButton"
+import TournamentTable from "./tournamentTable";
+export default function Body(){
+    const tournaments = [
+        {
+        id: 1,
+        name: "Турнир 1",
+        date: "2022-03-02",
+        organizer: "Организатор 1",
+        discipline: "Дисциплина 1",
+        status: "Статус 1"
+
+    },
+    {  
+        id: 2,
+        name: "Турнир 2",
+        date: "2022-03-02",
+        organizer: "Организатор 2",
+        discipline: "Дисциплина 2",
+        status: "Статус 2"
+    },
+];
+return (
+    <div className="min-h-screen bg-[#0B0B0B] text-white flex flex-col items-center py-12">
+      <div className="w-full max-w-6xl px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl text-[#FF8D0A]">Турниры</h1>
+          <CreateTournamentButton/>
         </div>
-        <div className="text-2xl bg-[#2F2B2B] text-white col-start-2 col-span-10 row-start-3 flex items-center h-[8vh] rounded-[15px]">
-            123413
-        </div>
-        <div className="text-2xl bg-[#2F2B2B] text-white col-start-2 col-span-10 row-start-4 flex items-center h-[8vh] rounded-[15px]">
-            123413
-        </div>
-        <div className="text-3xl  text-white col-start-8 col-span-4 row-start-5 flex items-center h-[8vh] rounded-[15px]">
-            + Добавить туринир
-        </div>
+        <TournamentTable tournaments={tournaments} />
+      </div>
     </div>
-)}
+  );
+};

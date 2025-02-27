@@ -1,7 +1,6 @@
 import UserService from '../domain/services/userService.js';
-import FakeUserRepository from '../domain/fakeRepositories/fakeUserRepository.js';
+import repository from '../domain/fakeRepositories/singletonRepo.js';
 
-const repository = new FakeUserRepository();
 const userService = new UserService(repository);
 
 export default {
