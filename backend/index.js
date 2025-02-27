@@ -1,10 +1,12 @@
 import express from 'express';
+import bodyParser from 'body-parser'
+import cors from 'cors'
+
 import myRoutes from './routes/myRoutes.js';
 import teamRouter from './routes/teamRoutes.js';
 import userRouter from './routes/userRoute.js';
-import bodyParser from 'body-parser';
 import authRouter from './routes/authRoute.js';
-import cors from 'cors';
+import { AppDataSource } from './config/datasource.js'
 
 const app = express();
 const port = process.env.PORT || 4000;
