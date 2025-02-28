@@ -1,5 +1,5 @@
 
-import FakeTournamentRepository from "./fakeTournamentRepository";
+import FakeTournamentRepository from "./fakeTournamentRepository.js";
 
 
 const tournamentRepository = new FakeTournamentRepository();

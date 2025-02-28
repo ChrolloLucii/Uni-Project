@@ -1,4 +1,4 @@
-import TournamentService from '../../domain/services/tournamentService.js';
+import TournamentService from '../../domain/services/TournamentService.js';
 import FakeTournamentRepository from '../../domain/fakeRepositories/fakeTournamentRepository.js';
 import FakeTeamRepository from '../../domain/fakeRepositories/fakeTeamRepository.js';
 import MatchService from '../../domain/services/matchService.js';

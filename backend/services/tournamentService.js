@@ -1,28 +1,40 @@
-import Tournament from '../domain/entities/Tournament.js'
-import { validateTournamentData } from '../domain/validators/tournamentValidator.js'
+import tournamentServiceInstance from "../infrastructure/di/TournamentServiceInstance.js";
 
-export default class TournamentService {
-	constructor(tournamentRepository) {
-		this.tournamentRepository = tournamentRepository
-	}
+const TournamentServiceApp = {
+  async createTournament(data) {
+    try {
+      const tournament = await tournamentServiceInstance.createTournament(data);
+      return tournament;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
 
-	async createTournament(data, user) {
-		// Проверка, что у пользователя роль ORGANIZER
-		if (user.role !== 'ORGANIZER') {
-			throw new Error('Нет доступа для создания турнира.')
-		}
+  async addTeamToTournament(tournamentId, teamData) {
+    try {
+      const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      const updatedTournament = await tournamentServiceInstance.addTeamToTournament(tournament, teamData);
+      return updatedTournament;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
 
-		// Валидация данных турнира
-		const errors = validateTournamentData(data)
-		if (errors.length) {
-			throw new Error(errors.join(' '))
-		}
+  async generateMatches(tournamentId) {
+    try {
+      const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      const updatedTournament = await tournamentServiceInstance.generateMatches(tournament);
+      return updatedTournament;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+};
 
-		// Создаём экземпляр сущности Tournament
-		const tournament = new Tournament(data)
-
-		// Сохраняем турнир через репозиторий
-		const savedTournament = await this.tournamentRepository.create(tournament)
-		return savedTournament
-	}
-}
+export default TournamentServiceApp;

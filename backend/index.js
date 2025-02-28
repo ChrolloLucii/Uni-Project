@@ -12,7 +12,7 @@ import './infrastructure/models/teamModel.js'
 const app = express();
 const port = process.env.PORT || 4000;
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 /**
  * Модуль маршрутов.
@@ -40,3 +40,4 @@ sequelize
 	.catch(error => {
 		console.error('Ошибка при синхронизации с БД:', error)
 	})
+export default app;

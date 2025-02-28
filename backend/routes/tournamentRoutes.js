@@ -1,9 +1,12 @@
-import { Router } from 'express'
-import { createTournament } from '../controllers/tournamentController.js'
+import {Router} from 'express';
+import TournamentController from '../controllers/tournamentController.js';
 
-const router = Router() // Инициализация маршрутизатора
+const tournamentRouter = Router();
 
-// Маршрут для создания турнира
-router.post('/tournaments', createTournament) // Обработчик createTournament будет вызван при POST-запросе на /tournaments 
+tournamentRouter.post('/tournaments', TournamentController.createTournament);
 
-export default router
+tournamentRouter.post('/tournaments/:tournamentId/teams', TournamentController.addTeamToTournament);
+
+tournamentRouter.post('/tournaments/:tournamentId/generate-matches', TournamentController.generateMatches);
+
+export default tournamentRouter;
