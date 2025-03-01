@@ -58,6 +58,102 @@ const TournamentServiceApp = {
       throw new Error(error.message);
     }
 
+  },
+  async updateTournament(tournamentId, updatedData){
+    try{
+    const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      const updatedTournament = await tournamentServiceInstance.updateTournament(tournamentId, updatedData);
+      return updatedTournament;
+  }
+  catch(error){
+    throw new Error(error.message);
+  }
+
+  },
+  async updateTeams(tournamentId, teams) {
+    try{
+      const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      tournament.teams = teams;
+
+      tournament.matches = tournamentServiceInstance.matchService.generateMatches(teams, tournamentServiceInstance.matchFactory);
+
+      const updatedTournament = await tournamentServiceInstance.update(tournament);
+      return updatedTournament;
+
+    }
+    catch(error){
+      throw new Error(error.message);
+    }
+  },
+
+  async updateMatches(tournamentId, matches){
+    try{
+      const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      tournament.matches = matches;
+      const updatedTournament = await tournamentServiceInstance.updateMatches(tournament, matches);
+      return updatedTournament;
+    }
+    catch(error){
+      throw new Error(error.message);
+    }
+  },
+  async disqualifyTeam(tournamentId, teamId){
+    try{
+     const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      tournament.teams = tournament.teams.filter(team=> team.id !== teamId);
+
+      tournament.matches = tournamentServiceInstance.matchService.generateMatches(tournament.teams, tournamentServiceInstance.matchFactory);
+      
+      const updatedTournament = await tournamentServiceInstance.update(tournament);
+      return updatedTournament;
+    }
+    catch(error){
+      throw new Error(error.message);
+    }
+  },
+  async getTournamentById(tournamentId){
+    try{
+      const tournament = await tournamentServiceInstance.getTournamentById(Number(tournamentId));
+      return tournament;
+    }
+    catch(error){
+      throw new Error(error.message);
+    }
+  },
+  async getAllTournaments(){
+    try{
+      const tournaments = await tournamentServiceInstance.getAllTournaments();
+      return tournaments;
+    }
+    
+    catch(error){
+      throw new Error(error.message)
+    } 
+  },
+  async assignJudge(tournamentId, judgeData){
+    try{
+      const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      const updatedTournament = await tournamentServiceInstance.assignJudge(tournament, judgeData);
+      return updatedTournament;
+    }
+    catch(error){
+      throw new Error(error.message);
+    }
   }
 };
 

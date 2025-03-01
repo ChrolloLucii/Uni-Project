@@ -156,5 +156,53 @@ describe('Full Backend Logic Integration Tests', () => {
       // Также предыдущие матчи должны сохраниться в previousMatches (если настроено такое хранение)
       expect(tournament.previousMatches.length).toBeGreaterThan(0);
     });
+    test('updateTournament should update tournament details', async () => {
+      const tournament = await tournamentService.createTournament(tournamentData);
+  
+      const updateData = {
+        name: 'Updated Tournament Name',
+        discipline: 'Updated Discipline',
+        startDate: '2025-10-01',
+        endDate: '2025-10-10',
+        status: 'ongoing'
+      };
+  
+      const updatedTournament = await tournamentService.updateTournament(tournament.id, updateData);
+      expect(updatedTournament.name).toBe(updateData.name);
+      expect(updatedTournament.discipline).toBe(updateData.discipline);
+      expect(new Date(updatedTournament.startDate)).toEqual(new Date(updateData.startDate));
+      expect(new Date(updatedTournament.endDate)).toEqual(new Date(updateData.endDate));
+      expect(updatedTournament.status).toBe(updateData.status);
+    });
+    test('updateTeams should update teams and regenerate matches', async () => {
+      const tournament = await tournamentService.createTournament(tournamentData);
+  
+      const teams = [
+        { id: "101", name: 'Team A', rating: 100, players: ['a1', 'a2', 'a3', 'a4', 'a5'] },
+        { id: "102", name: 'Team B', rating: 90, players: ['b1', 'b2', 'b3', 'b4', 'b5'] }
+      ];
+  
+      const updatedTournament = await tournamentService.updateTeams(tournament.id, teams);
+      expect(updatedTournament.teams.length).toBe(2);
+      expect(updatedTournament.matches.length).toBe(1); // 2 команды -> 1 матч
+    });
+  
+    test('disqualifyTeam should remove team and regenerate matches', async () => {
+      const tournament = await tournamentService.createTournament(tournamentData);
+  
+      const teams = [
+        { id: "101", name: 'Team A', rating: 100, players: ['a1', 'a2', 'a3', 'a4', 'a5'] },
+        { id: "102", name: 'Team B', rating: 90, players: ['b1', 'b2', 'b3', 'b4', 'b5'] },
+        { id: "103", name: 'Team C', rating: 80, players: ['c1', 'c2', 'c3', 'c4', 'c5'] }
+      ];
+  
+      for (const teamData of teams) {
+        await tournamentService.addTeamToTournament(tournament, teamData);
+      }
+  
+      const updatedTournament = await tournamentService.disqualifyTeam(tournament.id, "102");
+      expect(updatedTournament.teams.length).toBe(2);
+      expect(updatedTournament.matches.length).toBe(1); // 2 команды -> 1 матч
+    });
   });
 });

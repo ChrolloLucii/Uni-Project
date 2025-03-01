@@ -64,62 +64,132 @@ export default class TournamentService {
     return updatedTournament;
   }
 
-  async advanceRound(tournament){
-    const winners = tournament.matches.filter(match => match.played).map(match=>
-    {
-      if (match.result === 'teamA'){
-        return match.teamA;
+  async advanceRound(tournament) {
+    const winners = [];
+    for (const match of tournament.matches) {
+      if (match.played) {
+        if (match.result === 'bye') {
+          // Добавляем bye-команду только если её ещё нет
+          if (!winners.find(team => team.id === match.teamA.id)) {
+            winners.push(match.teamA);
+          }
+        } else {
+          winners.push(match.result === 'teamA' ? match.teamA : match.teamB);
+        }
       }
-      else if (match.result === 'teamB'){
-        return match.teamB;
-      }
-      else if (match.result === 'bye'){
-        return match.teamA;
-      }
-    });
-    if (winners.length < 2){
+    }
+    if (winners.length < 2) {
       throw new Error('Not enough winners');
     }
-
-    const newMatches = [];
     
+    const newMatches = [];
+    // Если число победителей нечётное, выделяем byeTeam (которая уже не должна фигурировать в парах)
     let byeTeam = null;
-    if (winners.length % 2 !==0) {
-      byeTeam = winners[winners.length-1];
+    if (winners.length % 2 !== 0) {
+      byeTeam = winners.pop(); // удаляем последнюю и сохраняем как byeTeam
     }
-    const numPairs = Math.floor(winners.length/2);
-
-    for (let i = 0; i< numPairs; i++){
-    const teamA = winners[i];
-    const teamB = winners[winners.length - i -1];
-    if (byeTeam && teamB === byeTeam && i === Math.floor(winners.length/2)) {
-      break;
+  
+    const numPairs = Math.floor(winners.length / 2);
+    for (let i = 0; i < numPairs; i++) {
+      const teamA = winners[i];
+      const teamB = winners[winners.length - i - 1];
+      const newMatch = this.matchFactory.createMatch({
+        teamA,
+        teamB,
+        scheduledTime: new Date(),
+        played: false,
+        result: null
+      });
+      newMatches.push(newMatch);
     }
-    const newMatch = this.matchFactory.createMatch({
-      teamA,
-      teamB,
-      scheduledTime: new Date(),
-      played: false,
-      result: null
-    });
-    newMatches.push(newMatch);
-  }
-  if (byeTeam){
-    const byeMatch = this.matchFactory.createMatch({
-      teamA: byeTeam,
-      teamB: null,
-      scheduledTime: new Date(),
-      played: true,
-      result: 'bye',
-      isBye: true
-    });
-    newMatches.push(byeMatch);
-  }
-  tournament.previousMatches = tournament.previousMatches ? tournament.previousMatches.concat(tournament.matches) : tournament.matches.slice();
+  
+    // Если byeTeam существовала, добавляем bye-матч отдельно
+    if (byeTeam) {
+      const byeMatch = this.matchFactory.createMatch({
+        teamA: byeTeam,
+        teamB: null,
+        scheduledTime: new Date(),
+        played: true,
+        result: 'bye',
+        isBye: true
+      });
+      newMatches.push(byeMatch);
+    }
 
-  // Обновляем сетку матчей новым раундом
-  tournament.matches = newMatches;
+    tournament.previousMatches = tournament.previousMatches
+      ? tournament.previousMatches.concat(tournament.matches)
+      : tournament.matches.slice();
+  
+    tournament.matches = newMatches;
+    const updatedTournament = await this.tournamentRepository.update(tournament);
+    return updatedTournament;
+  }
+
+  async updateTournament(tournamentId, updateData){
+    const tournament = await this.tournamentRepository.getById(Number(tournamentId));
+    if (!tournament){
+      throw new Error('Tournament not found');
+    }
+    Object.assign(tournament, updateData);
+    const updatedTournament = await this.tournamentRepository.update(tournament);
+    return updatedTournament;
+  }
+
+  async updateTeams(tournamentId, teams){
+    const tournament = await this.tournamentRepository.getById(Number(tournamentId));
+    if (!tournament){
+      throw new Error ('Tournament not found');
+    }
+    tournament.teams = teams;
+
+    tournament.matches = this.matchService.generateMatches(teams, this.matchFactory);
+    const updatedTournament = await this.tournamentRepository.update(tournament);
+    return updatedTournament;
+  }
+
+  async updateMatches(tournamentId, matches){
+    const tournament = await this.tournamentRepository.getById(Number(tournamentId));
+    if (!tournament){
+      throw new Error('Tournament not found');
+    }
+    tournament.matches = matches;
+    const updatedTournament = await this.tournamentRepository.update(tournament);
+    return updatedTournament;
+  }
+  async disqualifyTeam(tournamentId, teamId){
+    const tournament = await this.tournamentRepository.getById(Number(tournamentId));
+    if (!tournament){
+      throw new Error('Tournament not found');
+    }
+    tournament.teams = tournament.teams.filter( team => team.id !== teamId);
+    tournament.matches = this.matchService.generateMatches(tournament.teams, this.matchFactory);
+    const updatedTournament = await this.tournamentRepository.update(tournament);
+    return updatedTournament;
+  }
+
+  async getTournamentById(tournamentId){
+    const tournament = await this.tournamentRepository.getById(Number(tournamentId));
+    if (!tournament){
+      throw new Error('Tournament not found');
+    }
+    return tournament;
+  }
+  async getAllTournaments(){
+    const tournaments = await this.tournamentRepository.getAll();
+    return tournaments;
+  }
+
+  async assignJudge(tournamentId, judgeData){
+    const tournament = await this.tournamentRepository.getById(Number(tournamentId));
+  if (!tournament) {
+    throw new Error('Tournament not found');
+  }
+  // Проверяем, что судья еще не назначен
+  if (!tournament.judges.find(j => j.id === judgeData.id)) {
+    tournament.judges.push(judgeData);
+  }
   const updatedTournament = await this.tournamentRepository.update(tournament);
   return updatedTournament;
 }
+
   }

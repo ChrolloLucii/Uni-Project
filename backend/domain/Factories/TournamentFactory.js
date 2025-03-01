@@ -16,7 +16,8 @@ export default class TournamentFactory{
             status : data.status || "upcoming",
             teams : data.teams || [],
             matches : data.matches || [],
-            previousMatches : data.previousMatches || []
+            previousMatches : data.previousMatches || [],
+            judges : data.judges || []
         });
     }
 }

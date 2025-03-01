@@ -13,4 +13,15 @@ tournamentRouter.post('/tournaments/:tournamentId/advance-round', TournamentCont
 
 tournamentRouter.post('/matches/:matchId/record-result', TournamentController.recordMatchResult);
 
+tournamentRouter.put('/tournaments/:tournamentId', TournamentController.updateTournament);
+
+tournamentRouter.put('/tournaments/:tournamentId/teams', TournamentController.updateTeams);
+
+tournamentRouter.put('/tournaments/:tournamentId/matches', TournamentController.updateMatches);
+
+tournamentRouter.put('/tournaments/:tournamentId/teams/:teamId/disqualify', TournamentController.disqualifyTeam);
+
+tournamentRouter.get('/tournaments', TournamentController.getAllTournaments);
+tournamentRouter.get('/tournaments/:tournamentId', TournamentController.getTournament);
+tournamentRouter.put('/tournaments/:tournamentId/judges', TournamentController.assignJudge);
 export default tournamentRouter;
