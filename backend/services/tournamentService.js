@@ -34,6 +34,30 @@ const TournamentServiceApp = {
     } catch (error) {
       throw new Error(error.message);
     }
+  },
+
+  async recordMatchResult(matchId, result){
+    try{
+      const updatedTournament = await tournamentServiceInstance.recordMatchResult(matchId, result);
+      return updatedTournament;
+  }
+  catch(error){
+    throw new Error(error.message);
+  }
+},
+  async advanceRound(tournamentId){
+    try{
+      const tournament = await tournamentServiceInstance.tournamentRepository.getById(Number(tournamentId));
+      if (!tournament) {
+        throw new Error('Tournament not found');
+      }
+      const updatedTournament = await tournamentServiceInstance.advanceRound(tournament);
+      return updatedTournament
+    }
+    catch(error){
+      throw new Error(error.message);
+    }
+
   }
 };
 

@@ -22,4 +22,10 @@ export default class FakeTournamentRepository {
     async getAll() {
         return this.tournaments;
     }
+
+    async findByMatchId(matchId) {
+        return this.tournaments.find(tournament => {
+          return tournament.matches && tournament.matches.some(match => match.id === matchId);
+        });
+      }
 }

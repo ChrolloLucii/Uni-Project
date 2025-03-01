@@ -15,8 +15,8 @@ export default class TournamentFactory{
             discipline : data.discipline || "Unknown",
             status : data.status || "upcoming",
             teams : data.teams || [],
-            matches : data.matches || []
-            
+            matches : data.matches || [],
+            previousMatches : data.previousMatches || []
         });
     }
 }

@@ -1,5 +1,5 @@
 import tournamentRepository from '../../domain/fakeRepositories/singletonTournamentsRepository.js';
-import TournamentService from '../../domain/services/TournamentService.js';
+import TournamentService from '../../domain/services/tournamentService.js';
 import MatchService from '../../domain/services/matchService.js';
 import teamRepository from '../../domain/fakeRepositories/singletonTeamRepository.js';
 

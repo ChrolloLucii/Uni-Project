@@ -9,4 +9,8 @@ tournamentRouter.post('/tournaments/:tournamentId/teams', TournamentController.a
 
 tournamentRouter.post('/tournaments/:tournamentId/generate-matches', TournamentController.generateMatches);
 
+tournamentRouter.post('/tournaments/:tournamentId/advance-round', TournamentController.advanceRound);
+
+tournamentRouter.post('/matches/:matchId/record-result', TournamentController.recordMatchResult);
+
 export default tournamentRouter;

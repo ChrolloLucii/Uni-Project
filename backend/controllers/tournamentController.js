@@ -37,6 +37,27 @@ const TournamentController = {
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
+  },
+  async recordMatchResult(req, res){
+    try{
+      const {matchId} = req.params;
+      const {result} = req.body;
+      const updatedTournament = await TournamentServiceApp.recordMatchResult(matchId, result);
+      return res.status(200).json(updatedTournament);
+    }
+    catch(error){
+      return res.status(400).json({error: error.message})
+    }
+  },
+  async advanceRound(req, res){
+    try{
+      const {tournamentId} = req.params;
+      const updatedTournament = await TournamentServiceApp.advanceRound(tournamentId);
+      return res.status(200).json(updatedTournament);
+    }
+    catch(error){
+      return res.status(400).json({error: error.message})
+    }
   }
 };
 
