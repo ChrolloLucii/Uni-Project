@@ -17,7 +17,7 @@ class Tournament {
 		this.description = description
 		this.discipline = discipline
 		this.startDate = new Date(startDate)
-		this.endDate = new Date(endDate)
+		this.endDate = endDate ? new Date(endDate) : null
 		this.status = status // 'upcoming', 'ongoing', 'completed'
 		this.teams = teams || []
 		this.matches = matches || []
