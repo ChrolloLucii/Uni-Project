@@ -12,15 +12,14 @@ export async function GET(request) {
 
 export async function POST(request) {
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000' || 'http://example:4000';
-
+    const data = await request.json();
     const res = await fetch(`${backendUrl}/api/tournaments`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(request.body),
+        body: JSON.stringify(data),
     });
-
     const tournament = await res.json();
     return NextResponse.json(tournament, {status: 201});
 }
