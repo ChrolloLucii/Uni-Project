@@ -7,12 +7,16 @@ import teamRouter from './routes/teamRoutes.js';
 import userRouter from './routes/userRoute.js';
 import authRouter from './routes/authRoute.js';
 import sequelize from './infrastructure/orm/sequelize.js'
+import tournamentRouter from './routes/tournamentRoutes.js'
 import './infrastructure/models/teamModel.js'
+import './infrastructure/models/tournamentModel.js'
 
 const app = express();
 const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(tournamentRouter);
 
 /**
  * Модуль маршрутов.
