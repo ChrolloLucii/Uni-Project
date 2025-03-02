@@ -24,12 +24,8 @@ export default class TournamentService {
 
 	async addTeamToTournament(tournament, teamData) {
 		const team = this.teamFactory.createTeam(teamData)
-
-		if (!tournament.teams) {
-			tournament.teams = []
-		}
+		if (!Array.isArray(tournament.teams)) tournament.teams = []
 		tournament.teams.push(team)
-
 		const updatedTournament = await this.tournamentRepository.update(tournament)
 		return updatedTournament
 	}
