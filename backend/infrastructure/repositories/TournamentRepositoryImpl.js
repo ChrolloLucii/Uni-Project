@@ -2,21 +2,25 @@ import TournamentRepository from '../../domain/repositories/TournamentRepository
 import TournamentModel from '../models/tournamentModel.js'
 
 export default class TournamentRepositoryImpl extends TournamentRepository {
-	async create(tournament) {
-		// tournament – доменная сущность
+  async create(tournament) {
+		console.log('tournament:', tournament)
 		const {
 			name,
-			description,
-			startDate,
-			endDate,
-			organizer,
-			discipline,
-			status,
-			teams,
-			matches,
-			previousMatches,
-			judges,
-		} = tournament
+			description = null,
+			startDate = null,
+			endDate = null,
+			organizer = null,
+			discipline = null,
+			status = null,
+			teams = [],
+			matches = [],
+			previousMatches = [],
+			judges = [],
+		} = tournament || {}
+		// Дополнительная проверка:
+		if (description === undefined) {
+			console.error('description отсутствует в tournament')
+		}
 		const created = await TournamentModel.create({
 			name,
 			description,
@@ -30,20 +34,7 @@ export default class TournamentRepositoryImpl extends TournamentRepository {
 			previousMatches,
 			judges,
 		})
-		return {
-			id: created.id,
-			name: created.name,
-			description: created.description,
-			startDate: created.startDate,
-			endDate: created.endDate,
-			organizer: created.organizer,
-			discipline: created.discipline,
-			status: created.status,
-			teams: created.teams,
-			matches: created.matches,
-			previousMatches: created.previousMatches,
-			judges: created.judges,
-		}
+		return created.toJSON()
 	}
 
 	async getById(id) {

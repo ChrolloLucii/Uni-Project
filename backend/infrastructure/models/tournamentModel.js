@@ -17,7 +17,7 @@ const TournamentModel = sequelize.define(
 		},
 		description: {
 			field: 'description',
-			type: DataTypes.TEXT,
+			type: DataTypes.STRING,
 			allowNull: true,
 		},
 		startDate: {
