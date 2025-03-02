@@ -192,6 +192,14 @@ const TournamentServiceApp = {
 			throw new Error(error.message)
 		}
 	},
+	async deleteTournament(tournamentId) {
+		try {
+			await tournamentServiceInstance.deleteTournament(tournamentId)
+			return { message: 'Tournament deleted _-_' }
+		} catch (error) {
+			throw new Error(error.message)
+		}
+	},
 }
 
 export default TournamentServiceApp;

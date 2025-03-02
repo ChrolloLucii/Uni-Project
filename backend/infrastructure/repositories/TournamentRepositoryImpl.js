@@ -2,7 +2,7 @@ import TournamentRepository from '../../domain/repositories/TournamentRepository
 import TournamentModel from '../models/tournamentModel.js'
 
 export default class TournamentRepositoryImpl extends TournamentRepository {
-  async create(tournament) {
+	async create(tournament) {
 		console.log('tournament:', tournament)
 		const {
 			name,
@@ -133,6 +133,13 @@ export default class TournamentRepositoryImpl extends TournamentRepository {
 			}
 		}
 		return null
+	}
+	async delete(id) {
+		const found = await TournamentModel.findByPk(id)
+		if (!found) {
+			throw new Error('Tournament not found')
+		}
+		await found.destroy()
 	}
 
 	// Дополнительные методы (например, findByMatchId и т.д. но уже потом)

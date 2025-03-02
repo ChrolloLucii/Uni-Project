@@ -211,4 +211,13 @@ export default class TournamentService {
 		const updatedTournament = await this.tournamentRepository.update(tournament)
 		return updatedTournament
 	}
+  	async deleteTournament(tournamentId) {
+		const tournament = await this.tournamentRepository.getById(
+			Number(tournamentId)
+		)
+		if (!tournament) {
+			throw new Error('Tournament not found')
+		}
+		await this.tournamentRepository.delete(tournamentId)
+	}
 }
