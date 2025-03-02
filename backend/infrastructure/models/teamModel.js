@@ -1,24 +1,35 @@
-
 import { DataTypes } from 'sequelize'
 import sequelize from '../orm/sequelize.js'
 
 const TeamModel = sequelize.define(
-	'Team',
+	'TeamModel',
 	{
-		// Автоматически будет создан id (primary key)
+
+		id_team: {
+			field: 'id_team', 
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
 		name: {
-			type: DataTypes.STRING,
+			field: 'name', 
+			type: DataTypes.STRING(100),
 			allowNull: false,
 		},
-		// Храним массив игроков как JSON (в каждом игроке есть name и role)
 		players: {
-			type: DataTypes.JSONB, 
-			allowNull: false,
+			field: 'players',
+			type: DataTypes.JSONB,
+			allowNull: true,
+		},
+		rating: {
+			field: 'rating',
+			type: DataTypes.INTEGER,
+			allowNull: true,
 		},
 	},
 	{
-		tableName: 'teams',
-		timestamps: true, // createdAt, updatedAt
+		tableName: 'Team', 
+		timestamps: false,
 	}
 )
 

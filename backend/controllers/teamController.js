@@ -6,21 +6,15 @@ const repository = new TeamRepositoryImpl()
 const teamService = new TeamService(repository)
 
 export default {
-	async registration(req, res) {
-		try {
-			// Ожидаем, что в теле запроса передадут: id, name, players и опционально captainIndex
-			const { id, name, players, captainIndex } = req.body
-			const team = await teamService.createTeam({
-				id,
-				name,
-				players,
-				captainIndex,
-			})
-			return res.status(201).json(team)
-		} catch (error) {
-			res.status(400).json({ message: error.message })
-		}
-	},
+async registration(req, res) {
+  try {
+    const { name, players, rating } = req.body;
+    const team = await teamService.createTeam({ name, players, rating });
+    return res.status(201).json(team);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+},
    // реализация метода getTeamById
 	async getTeamById(req, res) {
 		try {
