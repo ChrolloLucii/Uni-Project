@@ -204,5 +204,27 @@ describe('Full Backend Logic Integration Tests', () => {
       expect(updatedTournament.teams.length).toBe(2);
       expect(updatedTournament.matches.length).toBe(1); // 2 команды -> 1 матч
     });
+    describe('assignJudge', () => {
+      let tournamentService;
+    
+      beforeEach(() => {
+
+        tournamentService = new TournamentService();
+        tournamentService.tournamentRepository = {
+          getById: jest.fn().mockResolvedValue({
+            id: 2,
+            judges: []
+          }),
+          update: jest.fn().mockImplementation(tournament => Promise.resolve(tournament))
+        };
+      });
+    
+      it('должен добавить судью, если его там нет', async () => {
+        const judgeData = { id: "1", name: "Лев" };
+        const tournament = await tournamentService.assignJudge("2", judgeData);
+    
+        expect(tournament.judges).toContainEqual(judgeData);
+      });
+    });
   });
 });
