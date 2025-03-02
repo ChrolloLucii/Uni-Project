@@ -5,7 +5,7 @@ import CreateTournamentButton from "@/components/CreateTournamentButton";
 export default function Login() {
     const handleLogin = (token) => {
       console.log('logged in, your token:', token);
-      localStorage.setItem('token', token);
+      localStorage.setItem('token', token); //ПЕРЕДЕЛАТЬ ПОД КУКИ
     }
 
   return (

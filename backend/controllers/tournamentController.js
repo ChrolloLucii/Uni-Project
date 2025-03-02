@@ -133,17 +133,16 @@ const TournamentController = {
       return res.status(400).json({error: error.message})
     }
   },
-  async assignJudge(req,res){
-    try{
-      const {tournamentId} = req.params;
+  async assignJudge(req, res) {
+    try {
+      const { tournamentId } = req.params;
       const judgeData = req.body;
-      const updatedTournament = await TournamentServiceApp.assignJudge(tournamentId, judgeData);
+      const updatedTournament = await TournamentServiceApp.assignJudge(Number(tournamentId), judgeData);
       return res.status(200).json(updatedTournament);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
     }
-    catch(error){
-      return res.status(400).json({error: error.message})
-    }
-  }
+  },
 
 };
 
