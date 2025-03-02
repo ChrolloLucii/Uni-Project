@@ -6,7 +6,6 @@ export default function TournamentForm(){
     const [tournament, setTournament] = useState({
         id : "",
         name: "",
-        description: "",
         startDate: "",
         endDate: "",
         organizer: "",
@@ -19,7 +18,6 @@ export default function TournamentForm(){
     });
 
     const disciplines = ["dota2", "counterStrike2"];
-    const statuses = ["upcoming", "ongoing", "finished"];
     
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -32,7 +30,7 @@ export default function TournamentForm(){
         };
 
         const handleSubmit = async (e) => {
-            e.preentDefault();
+            e.preventDefault();
             try {
                 const res = await fetch('/api/tournament',{
                     method: "POST",
@@ -63,7 +61,7 @@ export default function TournamentForm(){
             }
 
     };
-    return <form className ="text-black" onSubmit = {handleSubmit}>
+    return (<form className ="text-black" onSubmit = {handleSubmit}>
         <h2 className = "text-2xl mb-4 text-white">Создать турнир</h2>
     <div className = "mb-4">
         <label className = "block mb-1 text-white" htmlFor="name">Название</label>
@@ -77,7 +75,49 @@ export default function TournamentForm(){
         required
         />
     </div>
+    <div className="mb-4">
+        <label className="block mb-1 text-white" htmlFor="startDate">
+          Дата начала
+        </label>
+        <input
+          type="date"
+          id="startDate"
+          name="startDate"
+          value={tournament.startDate}
+          onChange={handleChange}
+          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+          required
+        />
+      </div>
+      <div>
 
-
-</form>
+      </div>
+      <div className="mb-4">
+        <label className="block mb-1 text-white" htmlFor="discipline">
+          Дисциплина
+        </label>
+        <select
+          id="discipline"
+          name="discipline"
+          value={tournament.discipline}
+          onChange={handleChange}
+          className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+          required
+        >
+          <option value="">Выберите дисциплину</option>
+          {disciplines.map((item, index) => (
+            <option key={index} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
+    
+      <button
+        type="submit"
+        className="w-full py-2 px-4 rounded text-white"
+      > Создать турнир
+      </button>
+    </form>
+  );
 }
