@@ -129,6 +129,20 @@ export default class TournamentRepositoryImpl extends TournamentRepository {
 			judges: found.judges,
 		}
 	}
+	async findByMatchId(matchId) {
+		// Получаем все турниры и ищем среди них тот, где в массиве matches есть матч с заданным ID
+		const tournaments = await TournamentModel.findAll()
+		for (let t of tournaments) {
+			const data = t.toJSON()
+			if (data.matches && Array.isArray(data.matches)) {
+				const match = data.matches.find(m => m.id == matchId)
+				if (match) {
+					return data
+				}
+			}
+		}
+		return null
+	}
 
-	// Дополнительные методы (например, findByMatchId и т.д. но уже потом) 
+	// Дополнительные методы (например, findByMatchId и т.д. но уже потом)
 }
