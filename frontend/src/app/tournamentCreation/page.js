@@ -7,6 +7,8 @@ export default function TournamentForm(){
         name: "",
         startDate: "",
         discipline: "",
+        startDate: "",
+        endDate: "",
         status: "",
         teams: [],
         judges: []
@@ -38,7 +40,7 @@ export default function TournamentForm(){
             const data = await res.json();
             console.log("Турнир создан", data);
             alert("Турнир создан");
-            router.push('/tournament/${data.id}/teams');
+            router.push(`/tournament/${data.id}/teams`);
         }
         catch(error){
             console.error(error);
@@ -63,6 +65,20 @@ export default function TournamentForm(){
                         required
                         />
                     </div>
+                    <div className="mb-4">
+              <label className="block mb-1" htmlFor="endDate">
+                Дата окончания
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                value={tournament.endDate}
+                onChange={handleTournamentChange}
+                className="w-full p-2 rounded bg-gray-700 border border-gray-600"
+                required
+              />
+            </div>
                     <div className = "mb-4">
                     <label className="block mb-1 text-white" htmlFor="startDate">Дата начала</label>
                     <input
@@ -94,6 +110,7 @@ export default function TournamentForm(){
                         </select>
 
                     </div>
+                    
 
                     <button type = "submit" className ="py-2 px-4 rounded text-white">
                         Создать турнир

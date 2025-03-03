@@ -220,4 +220,14 @@ export default class TournamentService {
 		}
 		await this.tournamentRepository.delete(tournamentId)
 	}
+
+	async getTournamentTeams(tournamentId){
+		const tournament = await this.tournamentRepository.getById(
+			Number(tournamentId)
+		)
+		if (!tournament){
+			throw new Error('Tournament not found')
+		}
+		return tournament.teams;
+	}
 }

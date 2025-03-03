@@ -200,6 +200,15 @@ const TournamentServiceApp = {
 			throw new Error(error.message)
 		}
 	},
+	async getTournamentTeams(tournamentId){
+		try {
+			const teams = await tournamentServiceInstance.getTournamentTeams(tournamentId)
+			return teams;
+		}
+		catch (error) {
+			throw new Error(error.message);
+		}
+}
 }
 
 export default TournamentServiceApp;

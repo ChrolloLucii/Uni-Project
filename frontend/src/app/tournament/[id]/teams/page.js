@@ -1,5 +1,5 @@
 "use client"
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useParams} from 'next/navigation';
 
 export default function AddTeamForm(){
@@ -8,6 +8,24 @@ export default function AddTeamForm(){
     const [newTeam, setNewTeam] = useState({id: "", name: "", rating: "", players: []});
     const [teams, setTeams] = useState([]);
 
+
+    useEffect(() => {
+        const fetchTournament = async () => {
+            try {
+                const res = await fetch (`http://localhost:4000/api/tournaments/${id}/teams`);
+                if (!res.ok){
+                    throw new Error(`ошибка: ${res.status}`);
+                }
+                const data = await res.json();
+                setTeams(Array.isArray(data) ? data : data.teams || []);
+            }
+            catch(error){
+                console.log(error)
+            }
+        }
+        fetchTournament();
+
+    }, [id]);
 
 const handleTeamChange = (e) => {
     const {name, value} = e.target;
@@ -19,13 +37,17 @@ const handleTeamChange = (e) => {
 
 const handleAddTeam = async (e) =>{
     e.preventDefault();
+    console.log("Отправляем данные команды:", newTeam);
 try{
     const res = await fetch(`http://localhost:4000/api/tournaments/${id}/teams`,
         {
             method: "POST",
             headers: 
             {"content-type" : "application/json"},
-            body: JSON.stringify(newTeam)
+            body: JSON.stringify({
+            id: newTeam.id,
+            name: newTeam.name,
+            rating: Number(newTeam.rating)})
         }
     );
     if (!res.ok){
@@ -96,11 +118,11 @@ return (
                         <div>
                             <h2 className="text-2xl mb-4 text-white">Команды</h2>
                             <ul>
-                                {createdTournament.teams.map((team, index) => (
-                                    <li key={index} className="text-white">
-                                        {team.name} - {team.rating}
-                                    </li>
-                                ))}
+                            {teams.map((team) => (
+              <li key={team.id}>
+                {team.name} (ID: {team.id}, MMR: {team.rating})
+              </li>
+            ))}
                             </ul>
                         </div>
                 )}            

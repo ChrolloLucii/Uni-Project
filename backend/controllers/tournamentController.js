@@ -168,6 +168,17 @@ const TournamentController = {
 			return res.status(400).json({ error: error.message })
 		}
 	},
+
+	async getTournamentTeams(req, res){
+		try{
+		const {id} = req.params
+		const teams = await TournamentServiceApp.getTournamentTeams(Number(id))
+		return res.status(200).json(teams);
+		}
+		catch(error){
+			return res.status(400).json({error: error.message});
+		}
+	}
 }
 
 export default TournamentController;
