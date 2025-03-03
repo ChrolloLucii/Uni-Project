@@ -40,7 +40,7 @@ export default function TournamentTable(){
                 <React.Fragment key={tournament.id}>
                     <div className="col-span-2 text-2xl flex items-center">{tournament.name}</div>
                     <div className="col-span-2 text-2xl flex items-center justify-center">{tournament.startDate}</div>
-                    <div className="col-span-2 text-2xl flex items-center justify-center">{tournament.organizer}</div>
+                    <div className="col-span-2 text-2xl flex items-center justify-center">{tournament.judges.username}</div>
                     <div className="col-span-3 text-2xl flex items-center justify-center">{tournament.discipline}</div>
                     <div className="col-span-2 text-2xl flex items-center justify-center">{tournament.status}</div>
                     <div className="col-span-1 text-2xl">
