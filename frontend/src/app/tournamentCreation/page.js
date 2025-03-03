@@ -40,7 +40,7 @@ export default function TournamentForm(){
             const data = await res.json();
             console.log("Турнир создан", data);
             alert("Турнир создан");
-            router.push(`/tournament/${data.id}/teams`);
+            router.push(`/tournament/${data.id}/manage`);
         }
         catch(error){
             console.error(error);
