@@ -56,11 +56,11 @@ export default function TournamentTable(){
       };
     return (
         <div className="grid grid-cols-12 gap-4 p-4 rounded-lg">
-            <div className="col-span-2 text-3xl text-white flex items-center">Название</div>
-            <div className="col-span-2 text-3xl text-white flex items-center" >Дата</div>
-            <div className="col-span-2 text-3xl text-white flex items-center justify-center">Судьи</div>
-            <div className="col-span-3 text-3xl text-white flex items-center justify-center">Дисциплина</div>
-            <div className="col-span-2 text-3xl text-white flex items-center justify-center">Статус</div>
+            <div className="col-span-2 text-3xl text-white">Название</div>
+            <div className="col-span-2 text-3xl text-white">Дата</div>
+            <div className="col-span-2 text-3xl text-white">Организатор</div>
+            <div className="col-span-2 text-3xl text-white">Дисциплина</div>
+            <div className="col-span-2 text-3xl text-white">Статус</div>
             <div></div>
             {tournaments.map((tournament) => (
                 <React.Fragment key={tournament.id}>
