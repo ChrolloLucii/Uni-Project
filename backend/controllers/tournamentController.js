@@ -171,8 +171,8 @@ const TournamentController = {
 
 	async getTournamentTeams(req, res){
 		try{
-		const {id} = req.params
-		const teams = await TournamentServiceApp.getTournamentTeams(Number(id))
+		const {tournamentId} = req.params
+		const teams = await TournamentServiceApp.getTournamentTeams(Number(tournamentId))
 		return res.status(200).json(teams);
 		}
 		catch(error){
