@@ -6,11 +6,9 @@ const expiry = '2h';
 
 const InviteService = {
     generateInviteToken(payload){
-        const {email, role} = payload;
+        const {role} = payload;
         const finalRole = role || 'JUDGE';
-        const tokenPayload = {
-            email,
-            role : finalRole};
+        const tokenPayload = { role : finalRole};
         return jwt.sign(tokenPayload, secret, {expiresIn : expiry});
     },
 
@@ -24,9 +22,6 @@ const InviteService = {
     },
     async registerUserFromInvite({token, username, password, nickname, email}){
         const inviteData = this.verifyInviteToken(token);
-        if (inviteData.email && email && inviteData.email !== email){
-            throw new Error('Email does not match invite');
-        }
         const user = {
             id : Date.now(),
             role : inviteData.role,

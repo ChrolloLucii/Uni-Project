@@ -1,15 +1,22 @@
 import express from 'express';
+import bodyParser from 'body-parser'
+import cors from 'cors'
+
 import myRoutes from './routes/myRoutes.js';
 import teamRouter from './routes/teamRoutes.js';
 import userRouter from './routes/userRoute.js';
-import bodyParser from 'body-parser';
 import authRouter from './routes/authRoute.js';
-import cors from 'cors';
+import sequelize from './infrastructure/orm/sequelize.js'
+import tournamentRouter from './routes/tournamentRoutes.js'
+import './infrastructure/models/teamModel.js'
+import './infrastructure/models/tournamentModel.js'
 
 const app = express();
 const port = process.env.PORT || 4000;
 app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json());
+app.use(tournamentRouter);
 
 /**
  * Модуль маршрутов.
@@ -25,6 +32,16 @@ app.use(bodyParser.json());
 
 app.use('/api', myRoutes);
 app.use('/auth', authRouter);
-app.listen(port, () =>{
-    console.log("Server is running on port " + port);
-})
+app.use('/teams', teamRouter)
+sequelize
+	.sync() 
+	.then(() => {
+		console.log('База данных успешно синхронизирована')
+		app.listen(port, () => {
+			console.log('Server is running on port localhost' + port)
+		})
+	})
+	.catch(error => {
+		console.error('Ошибка при синхронизации с БД:', error)
+	})
+export default app;

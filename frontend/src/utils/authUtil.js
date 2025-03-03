@@ -22,5 +22,5 @@ export function hasOrganizerAccess(token){
     if (!decodedToken){
         return false;
     }
-    return decodedToken.role === 'ORGANIZER';
+    return decodedToken.role === 'ORGANIZER' || decodedToken.role === 'JUDGE';
 }

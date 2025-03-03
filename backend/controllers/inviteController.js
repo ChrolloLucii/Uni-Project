@@ -5,7 +5,7 @@ const inviteController = {
         try {
             const {token, username, password, nickname, email} = req.body;
             const user = await InviteService.registerUserFromInvite({token, username, password, nickname, email});
-            res.status(200).json({message: 'User registered successfully', user});
+            res.status(200).json({message: 'User registered successfully', user, redirectUrl: '/login'});
         
         }
 

@@ -20,3 +20,5 @@ logs/
 #Operating system Files
 .DS_Store
 thumbs.db
+backend/infrastructure/orm/sequelize.js
+backend/infrastructure/orm/sequelize.js

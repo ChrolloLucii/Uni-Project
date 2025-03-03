@@ -1,12 +1,16 @@
 class Tournament {
-	constructor({ id, name, discipline, startDate, endDate, status, teams }) {
-		this.id = id // Идентификатор турнира
-		this.name = name // Название турнира
-		this.discipline = discipline // Название дисциплины
-		this.startDate = new Date(startDate) // Дата начала турнира
-		this.endDate = new Date(endDate) // Дата окончания турнира
+	constructor({ id, name, discipline, startDate, endDate, status, teams, matches, previousMatches, judges }) {
+		this.id = id 
+		this.name = name 
+		this.description = description
+		this.discipline = discipline 
+		this.startDate = new Date(startDate) 
+		this.endDate = new Date(endDate) 
 		this.status = status // 'upcoming', 'ongoing', 'completed'
-		this.teams = teams || [] // Количетсво названий команд (максимум 16)
+    	this.teams = teams || []
+		this.matches = matches || []
+		this.previousMatches = previousMatches || []
+		this.judges = judges || [];
 	}
 }
 export default Tournament
