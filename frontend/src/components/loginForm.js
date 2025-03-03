@@ -40,30 +40,33 @@ export default function LoginForm({onLogin}){
         })
     }
     return(
-        <div>
+        <div className='min-h-[75vh] flex items-center justify-center'>
         <form onSubmit = {handleSubmit}>
-            <div>
+                <div>
+                    <div className="bg-black bg-opacity-70 p- rounded-lg text-center">
+                    <h1 className="text-2xl text-orange-500 mb-4">Добро пожаловать</h1>
+                    <p className="text-sm mb-6">Уважаемый организатор, введите Логин и пароль, который вы получили от Админа</p>
+                </div>
                 <label>
-                    Username :
-                    <input className = "text-black"
+                    <input className = "w-full p-4 mb-4 bg-gray-800 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         value = {userName}
                         onChange = {(e) => setUserName(e.target.value)}
-                        placeholder="Enter Username"
+                        placeholder="Username"
                     />
                 </label>
                 <label>
-                    Password
-                    <input className = "text-black"
+
+                    <input className = "w-full p-4 mb-4 bg-gray-800 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         value = {password}
                         onChange = {(e) => setPassword(e.target.value)}
-                        placeholder="Enter Password"
+                        placeholder="Password"
                     />
                 </label>
 
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button type ="submit">Login</button>
+            <button className='w-full p-4 bg-orange-500 text-white rounded-lg font-semibold text-lg hover:bg-orange-600 transition duration-300' type ="submit">Login</button>
 
         </form>
         <button onClick = {handleLogout}>Logout</button>

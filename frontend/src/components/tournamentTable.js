@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 export default function TournamentTable({tournaments}){
     return (
-        <div className="grid grid-cols-12 gap-4 p-4 rounded-lg">
+        <div className="grid grid-cols-12 gap-4 p-4 rounded-lg ">
             <div className="col-span-2 text-3xl text-white">Название</div>
             <div className="col-span-2 text-3xl text-white">Дата</div>
             <div className="col-span-2 text-3xl text-white">Организатор</div>
