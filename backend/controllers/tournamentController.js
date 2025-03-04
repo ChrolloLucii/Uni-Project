@@ -161,8 +161,8 @@ const TournamentController = {
 	},
 	async deleteTournament(req, res) {
 		try {
-			const { id } = req.params
-			await TournamentServiceApp.deleteTournament(Number(id))
+			const { tournamentId } = req.params
+			await TournamentServiceApp.deleteTournament(Number(tournamentId))
 			return res.status(204).send() //No Content
 		} catch (error) {
 			return res.status(400).json({ error: error.message })

@@ -22,3 +22,4 @@ logs/
 thumbs.db
 backend/infrastructure/orm/sequelize.js
 backend/infrastructure/orm/sequelize.js
+backend/infrastructure/orm/sequelize.js
