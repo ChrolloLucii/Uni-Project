@@ -1,4 +1,4 @@
-import InviteService from "../services/InviteService.js";
+import InviteService from "../services/inviteService.js";
 
 const generateContoller = {
     async generateToken(req, res) {

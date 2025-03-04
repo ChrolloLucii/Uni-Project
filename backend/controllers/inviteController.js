@@ -1,4 +1,4 @@
-import InviteService from "../services/InviteService.js";
+import InviteService from "../services/inviteService.js";
 
 const inviteController = {
     register : async (req, res) =>{

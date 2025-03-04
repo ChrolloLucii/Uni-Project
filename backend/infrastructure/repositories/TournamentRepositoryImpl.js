@@ -1,4 +1,4 @@
-import TournamentRepository from '../../domain/repositories/TournamentRepository.js'
+import TournamentRepository from '../../domain/repositories/tournamentRepository.js'
 import TournamentModel from '../models/tournamentModel.js'
 
 export default class TournamentRepositoryImpl extends TournamentRepository {
