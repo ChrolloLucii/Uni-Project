@@ -32,22 +32,30 @@ export default class TournamentService {
 
 	async generateMatches(tournament) {
 		if (!tournament.teams || tournament.teams.length < 2) {
-			throw new Error('Not enough teams')
+		  throw new Error('Not enough teams');
 		}
-
+	  
 		const sortedTeams = [...tournament.teams].sort(
-			(a, b) => b.rating - a.rating
-		)
-
+		  (a, b) => b.rating - a.rating
+		);
+	  
+		// Генерируем матчи (все будут для первого раунда)
 		const matches = this.matchService.generateMatches(
-			sortedTeams,
-			this.matchFactory
-		)
-		tournament.matches = matches
-
-		const updatedTournament = await this.tournamentRepository.update(tournament)
-		return updatedTournament
-	}
+		  sortedTeams,
+		  this.matchFactory
+		);
+	  
+		// Устанавливаем номер раунда для всех сгенерированных матчей – раунд 1
+		matches.forEach(match => {
+		  match.round = 1;
+		});
+	  
+		tournament.matches = matches;
+	  
+		const updatedTournament = await this.tournamentRepository.update(tournament);
+		return updatedTournament;
+	  }
+	  
 
 	async recordMatchResult(matchId, result) {
 		const tournament = await this.tournamentRepository.findByMatchId(matchId)
@@ -65,65 +73,71 @@ export default class TournamentService {
 	}
 
 	async advanceRound(tournament) {
-		const winners = []
+		// Найдём максимальный номер раунда из текущих матчей
+		const currentRound = Math.max(...tournament.matches.map(match => match.round || 1));
+		const winners = [];
 		for (const match of tournament.matches) {
-			if (match.played) {
-				if (match.result === 'bye') {
-					// Добавляем bye-команду только если её ещё нет
-					if (!winners.find(team => team.id === match.teamA.id)) {
-						winners.push(match.teamA)
-					}
-				} else {
-					winners.push(match.result === 'teamA' ? match.teamA : match.teamB)
-				}
+		  if (match.played) {
+			if (match.result === 'bye') {
+			  // Если BYE, команда-победитель – teamA (предполагается, что teamB отсутствует)
+			  if (!winners.find(team => team.id === match.teamA.id)) {
+				winners.push(match.teamA);
+			  }
+			} else {
+			  winners.push(match.result === 'teamA' ? match.teamA : match.teamB);
 			}
+		  }
 		}
 		if (winners.length < 2) {
-			throw new Error('Not enough winners')
+		  throw new Error('Not enough winners');
 		}
-
-		const newMatches = []
-		// Если число победителей нечётное, выделяем byeTeam (которая уже не должна фигурировать в парах)
-		let byeTeam = null
+	  
+		const newMatches = [];
+		// Если число победителей нечётное – оставляем последнюю команду на BYE
+		let byeTeam = null;
 		if (winners.length % 2 !== 0) {
-			byeTeam = winners.pop() // удаляем последнюю и сохраняем как byeTeam
+		  byeTeam = winners.pop();
 		}
-
-		const numPairs = Math.floor(winners.length / 2)
+	  
+		const numPairs = Math.floor(winners.length / 2);
 		for (let i = 0; i < numPairs; i++) {
-			const teamA = winners[i]
-			const teamB = winners[winners.length - i - 1]
-			const newMatch = this.matchFactory.createMatch({
-				teamA,
-				teamB,
-				scheduledTime: new Date(),
-				played: false,
-				result: null,
-			})
-			newMatches.push(newMatch)
+		  const teamA = winners[i];
+		  const teamB = winners[winners.length - i - 1];
+		  const newMatch = this.matchFactory.createMatch({
+			teamA,
+			teamB,
+			scheduledTime: new Date(),
+			played: false,
+			result: null,
+		  });
+		  // Устанавливаем для нового раунда номер равный текущему + 1
+		  newMatch.round = currentRound + 1;
+		  newMatches.push(newMatch);
 		}
-
-		// Если byeTeam существовала, добавляем bye-матч отдельно
+	  
 		if (byeTeam) {
-			const byeMatch = this.matchFactory.createMatch({
-				teamA: byeTeam,
-				teamB: null,
-				scheduledTime: new Date(),
-				played: true,
-				result: 'bye',
-				isBye: true,
-			})
-			newMatches.push(byeMatch)
+		  const byeMatch = this.matchFactory.createMatch({
+			teamA: byeTeam,
+			teamB: null,
+			scheduledTime: new Date(),
+			played: true,
+			result: 'bye',
+			isBye: true,
+		  });
+		  // Также для bye-матча устанавливаем раунд текущего + 1
+		  byeMatch.round = currentRound + 1;
+		  newMatches.push(byeMatch);
 		}
-
+	  
+		// Сохраняем текущие матчи как предыдущие, а новые матчи устанавливаем как текущие
 		tournament.previousMatches = tournament.previousMatches
-			? tournament.previousMatches.concat(tournament.matches)
-			: tournament.matches.slice()
-
-		tournament.matches = newMatches
-		const updatedTournament = await this.tournamentRepository.update(tournament)
-		return updatedTournament
-	}
+		  ? tournament.previousMatches.concat(tournament.matches)
+		  : tournament.matches.slice();
+	  
+		tournament.matches = newMatches;
+		const updatedTournament = await this.tournamentRepository.update(tournament);
+		return updatedTournament;
+	  }
 
 	async updateTournament(tournamentId, updateData) {
 		const tournament = await this.tournamentRepository.getById(

@@ -3,7 +3,7 @@ import {NextResponse} from 'next/server';
 
 export async function POST(request, {params}) {
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000' || 'http://example:4000';
-    const { id } = params;
+    const { id } = await params;
     const tournamentId = parseInt(id, 10);
     
     try{
