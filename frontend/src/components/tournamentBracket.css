@@ -53,3 +53,94 @@
     font-weight: bold;
     color: #333;
   }
+  .tbd-team {
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .placeholder-match {
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+  }
+  
+  .predictable:hover {
+    cursor: pointer;
+    background-color: rgba(255, 141, 10, 0.2);
+  }
+  
+  .prediction-mark {
+    color: #FF8D0A;
+    font-weight: bold;
+  }
+  .bracketContainer {
+    display: flex;
+    overflow-x: auto;
+    padding: 20px;
+    gap: 40px;
+  }
+  
+  .round {
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .roundTitle {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+  
+  .matchesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .match {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .placeholder {
+    border: 1px dashed #4a5568;
+    opacity: 0.7;
+  }
+  
+  .team {
+    padding: 10px;
+    border-bottom: 1px solid #4a5568;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .team:last-child {
+    border-bottom: none;
+  }
+  
+  .winner {
+    background-color: rgba(72, 187, 120, 0.2);
+    font-weight: bold;
+  }
+  
+  .tbdTeam {
+    color: #a0aec0;
+    font-style: italic;
+  }
+  
+  .clickable {
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+  
+  .clickable:hover {
+    background-color: rgba(66, 153, 225, 0.15);
+  }
+  
+  .predictionMark {
+    color: #ed8936;
+    margin-left: 5px;
+  }
