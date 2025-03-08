@@ -1,11 +1,12 @@
 
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import GenerateMatchesButton from '@/components/generateMatchesButton';
 import TournamentBracket from '@/components/tournamentBracket';
-
-
+import Footer from '@/components/footer';
+import Header from '@/components/header';
 function transformMatchesToBracket(tournament) {
   const teams = tournament.teams || [];
   const allMatches = [
@@ -77,6 +78,7 @@ export default function ManageTournamentPage() {
   const [predictedMode, setPredictedMode] = useState(false);
   const [originalRounds, setOriginalRounds] = useState([]);
   const [tournamentWinner, setTournamentWinner] = useState(null);
+  const [tournamentName, setTournamentName] = useState("");
   const getNextMatch = (roundIndex, matchIndex) => {
     if (roundIndex >= rounds.length -1) {
       return null;
@@ -169,6 +171,7 @@ export default function ManageTournamentPage() {
     const res = await fetch(`http://localhost:4000/api/tournaments/${id}`);
     if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
     const tournament = await res.json();
+    setTournamentName(tournament.name);
     if (tournament.matches || tournament.previousMatches) {
       const fullBracket = transformMatchesToBracket(tournament);
       setRounds(fullBracket);
@@ -382,140 +385,211 @@ export default function ManageTournamentPage() {
   };
 
   return (
-    <div className="mt-8">
-      <GenerateMatchesButton
-        onMatchesGenerated={(updatedMatches) => {
-          const newRounds = transformMatchesToBracket(updatedMatches);
-          setRounds(newRounds);
-          setOriginalRounds(newRounds);
-          console.log("Новая сетка:", newRounds);
-        }}
-      />
-      <h2 className="text-2xl mb-4 text-white">Добавить команду в турнир {id}</h2>
-      <form className="mb-4" onSubmit={handleAddTeam}>
-        <div className="mb-4">
-          <label className="block mb-1 text-white" htmlFor="id">id</label>
-          <input
-            type="text"
-            id="id"
-            name="id"
-            value={newTeam.id}
-            onChange={handleTeamChange}
-            className="border border-gray-300 text-black rounded p-2"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 text-white" htmlFor="name">Название</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={newTeam.name}
-            onChange={handleTeamChange}
-            className="border border-gray-300 text-black rounded p-2"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1 text-white" htmlFor="rating">Средний MMR</label>
-          <input
-            type="text"
-            id="rating"
-            name="rating"
-            value={newTeam.rating}
-            onChange={handleTeamChange}
-            className="border border-gray-300 rounded text-black p-2"
-            required
-          />
-        </div>
-        <button type="submit" className="w-full py-2 px-4 rounded text-white bg-gray-700">
-          Добавить команду
-        </button>
-      </form>
-      {teams.length > 0 && (
-        <div>
-          <h2 className="text-2xl mb-4 text-white">Команды</h2>
-          <ul>
-            {teams.map((team) => (
-              <li key={team.id}>
-                {team.name} (ID: {team.id}, MMR: {team.rating})
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <h2 className="text-2xl text-white mb-4">Сетка турнира {id}</h2>
+    <div className="flex flex-col min-h-screen bg-gray-900">
+      <Header />
       
-      <div className="mb-4 p-4 bg-gray-800 rounded shadow-lg">
-  <div className="flex items-center justify-between">
-    <div className="flex items-center space-x-4">
-      <div className ="mb-2 text-white">
-        <span className ="inline-block px-3 py-1 bg-gray-700 rounded-lg">
-          Текущий раунд: {getCurrentRoundNumber()}
-        </span>
-      </div>
-      {/* Кнопка перехода к следующему раунду */}
-      <button 
-        onClick={handleAdvanceRound}
-        disabled={predictedMode || !canAdvanceRound()}
-        className={`px-4 py-2 text-white text-sm rounded transition ${
-          predictedMode || !canAdvanceRound() 
-            ? 'bg-gray-600 cursor-not-allowed' 
-            : 'bg-blue-600 hover:bg-blue-700'
-        }`}
-        title={
-          predictedMode ? "Недоступно в режиме прогноза" : !canAdvanceRound() ? "Завершите все матчи текущего раунда" : "Перейти к следующему раунду"
-        }
-      >
-        Перейти к следующему раунду
-      </button>
+      <main className="flex-grow px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Заголовок турнира */}
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold text-white">
+              Управление турниром: {tournamentName}
+            </h1>
+            <p className="text-gray-400 mt-2">ID: {id}</p>
+          </div>
+          
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            {/* Левая колонка - Управление командами */}
+            <div className="xl:col-span-1 space-y-6">
+              {/* Карточка с формой добавления команды */}
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
+                  Добавление команды
+                </h2>
+                <form onSubmit={handleAddTeam}>
+                  <div className="mb-4">
+                    <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="id">
+                      ID команды
+                    </label>
+                    <input
+                      type="text"
+                      id="id"
+                      name="id"
+                      value={newTeam.id}
+                      onChange={handleTeamChange}
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="name">
+                      Название команды
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={newTeam.name}
+                      onChange={handleTeamChange}
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="rating">
+                      Средний MMR
+                    </label>
+                    <input
+                      type="text"
+                      id="rating"
+                      name="rating"
+                      value={newTeam.rating}
+                      onChange={handleTeamChange}
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    className="w-full py-2.5 px-5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    Добавить команду
+                  </button>
+                </form>
+              </div>
+              
+              {/* Карточка со списком команд */}
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
+                  Команды в турнире <span className="text-gray-400">({teams.length})</span>
+                </h2>
+                {teams.length > 0 ? (
+                  <div className="overflow-y-auto max-h-96">
+                    <ul className="space-y-2">
+                      {teams.map((team) => (
+                        <li key={team.id} className="px-3 py-2 bg-gray-700 rounded-md flex items-center justify-between">
+                          <span className="text-white font-medium">{team.name}</span>
+                          <div className="text-sm text-gray-400">
+                            ID: {team.id} | MMR: {team.rating}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-center py-4">
+                    Команды еще не добавлены
+                  </p>
+                )}
+              </div>
+              
+              {/* Кнопка генерации матчей */}
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
+                  Генерация матчей
+                </h2>
+                <GenerateMatchesButton
+                  onMatchesGenerated={(updatedMatches) => {
+                    const newRounds = transformMatchesToBracket(updatedMatches);
+                    setRounds(newRounds);
+                    setOriginalRounds(newRounds);
+                  }}
+                  className="w-full py-2.5 px-5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+            </div>
+            
+            {/* Правая колонка - Турнирная сетка */}
+            <div className="xl:col-span-2">
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+                <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
+                  Управление сеткой турнира
+                </h2>
+                
+                <div className="mb-6">
+                  <div className="flex flex-wrap gap-4 items-center justify-between">
+                    {/* Текущий раунд и кнопка продвижения */}
+                    <div className="flex flex-wrap items-center gap-4">
+                      <span className="inline-block px-4 py-2 bg-gray-700 text-white rounded-lg">
+                        Текущий раунд: {getCurrentRoundNumber()}
+                      </span>
+                      
+                      <button 
+                        onClick={handleAdvanceRound}
+                        disabled={predictedMode || !canAdvanceRound()}
+                        className={`px-4 py-2 text-white text-sm rounded-lg transition ${
+                          predictedMode || !canAdvanceRound() 
+                            ? 'bg-gray-600 cursor-not-allowed opacity-60' 
+                            : 'bg-blue-600 hover:bg-blue-700'
+                        }`}
+                        title={
+                          predictedMode 
+                            ? "Недоступно в режиме прогноза" 
+                            : !canAdvanceRound() 
+                              ? "Завершите все матчи текущего раунда" 
+                              : "Перейти к следующему раунду"
+                        }
+                      >
+                        Перейти к следующему раунду
+                      </button>
+                    </div>
+                    
+                    {/* Управление режимом прогноза */}
+                    <div className="flex flex-wrap items-center gap-3">
+                      <label className="flex items-center space-x-2 text-white cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={predictedMode}
+                          onChange={(e) => togglePredictMode(e.target.checked)}
+                          className="w-4 h-4 accent-blue-500"
+                        />
+                        <span>{predictedMode ? "Режим прогноза активен" : "Режим прогноза"}</span>
+                      </label>
+                      
+                      {predictedMode && (
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={resetPredictions}
+                            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md transition"
+                          >
+                            Сбросить
+                          </button>
+                          <button 
+                            onClick={applyPredictions}
+                            className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition"
+                          >
+                            Применить
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {predictedMode && (
+                    <div className="mt-3 p-3 bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-200 rounded-md">
+                      <p className="text-sm">
+                        В режиме прогноза вы можете выбирать победителей, не отправляя данные на сервер.
+                        Нажмите на команду в матче, чтобы отметить её как победителя.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Турнирная сетка */}
+              <div className="bg-gray-800 rounded-lg shadow-lg p-6 overflow-x-auto">
+                <TournamentBracket
+                  rounds={rounds}
+                  onSelectWinner={handleSelectWinner}
+                  predictedMode={predictedMode}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
       
-      {/* Переключатель режима прогноза */}
-      <label className="text-white flex items-center space-x-2 ml-4">
-        <input
-          type="checkbox"
-          checked={predictedMode}
-          onChange={(e) => togglePredictMode(e.target.checked)}
-          className="w-5 h-5"
-        />
-        <span className="ml-2">
-          {predictedMode ? "✓ Режим прогноза активен" : "Режим прогноза"}
-        </span>
-      </label>
-    </div>
-    
-    {predictedMode && (
-      <div className="flex space-x-3">
-        <button 
-          onClick={resetPredictions}
-          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
-        >
-          Сбросить
-        </button>
-        <button 
-          onClick={applyPredictions}
-          className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
-        >
-          Применить прогнозы
-        </button>
-      </div>
-    )}
-  </div>
-  
-  {predictedMode && (
-    <p className="text-gray-400 text-sm mt-2">
-      В режиме прогноза вы можете выбирать победителей, не отправляя данные на сервер.
-      Нажмите на команду, чтобы отметить её как победителя.
-    </p>
-  )}
-</div>
-      
-      <TournamentBracket
-        rounds={rounds}
-        onSelectWinner={handleSelectWinner}
-        predictedMode={predictedMode}
-      />
+      <Footer />
     </div>
   );
 }

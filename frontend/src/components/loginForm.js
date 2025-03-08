@@ -1,34 +1,43 @@
 "use client";
 import {useState} from 'react';
-
+import {useRouter} from 'next/navigation';
 export default function LoginForm({onLogin}){
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const router = useRouter();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
-            const res = await fetch('api/auth/',{
+        try {
+            const res = await fetch('http://localhost:4000/api/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"username" : userName , "password" : password})
+                body: JSON.stringify({"username": userName, "password": password})
             });
-            const data = await res.json();
-            if (res.ok){
-                onLogin(data.token);
+    
+            if (res.status === 200) {
+                const data = await res.json();
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                setLoggedIn(true);
+                
+               
+                if (data.user.role === 'ORGANIZER') {
+                    router.push('/dashboard'); 
+                } else {
+                    router.push('/');
+                }
+                
+                console.log('Авторизация успешна!');
+            } else {
+                setError('Неверное имя пользователя или пароль');
             }
-            else {
-                setError (data.message || 'Что-то пошло не так');
-            }
-        }
-        catch(err){
+        } catch(err) {
             setError('Что-то пошло не так');
             console.log(err);
         }
-        
     };
 
     const handleLogout = () => {
@@ -44,7 +53,7 @@ export default function LoginForm({onLogin}){
         <form onSubmit = {handleSubmit}>
                 <div>
                     <div className="bg-black bg-opacity-70 p- rounded-lg text-center">
-                    <h1 className="text-2xl text-orange-500 mb-4">Добро пожаловать</h1>
+                    <h1 className="text-2xl text-[#FF8D0A] mb-4">Добро пожаловать</h1>
                     <p className="text-sm mb-6">Уважаемый организатор, введите Логин и пароль, который вы получили от Админа</p>
                 </div>
                 <label>
@@ -66,10 +75,10 @@ export default function LoginForm({onLogin}){
             </div>
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button className='w-full p-4 bg-orange-500 text-white rounded-lg font-semibold text-lg hover:bg-orange-600 transition duration-300' type ="submit">Login</button>
+            <button className='w-full p-4 bg-[#FF8D0A] text-black rounded-lg font-semibold text-lg hover:bg-orange-600 transition duration-300' type ="submit">Вход</button>
 
         </form>
-        <button onClick = {handleLogout}>Logout</button>
+
         </div>
     );
 }

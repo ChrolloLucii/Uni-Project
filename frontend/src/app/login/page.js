@@ -11,7 +11,6 @@ export default function Login() {
 
   return (
     <main className="min-h-screen flex flex-col bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center">
-      <h1>Вход</h1>
       <LoginForm onLogin={handleLogin} />
       <CreateTournamentButton/>
       <Footer/>

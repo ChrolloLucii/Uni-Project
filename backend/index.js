@@ -8,9 +8,12 @@ import userRouter from './routes/userRoute.js';
 import authRouter from './routes/authRoute.js';
 import sequelize from './infrastructure/orm/sequelize.js'
 import tournamentRouter from './routes/tournamentRoutes.js'
+import inviteRouter from './routes/inviteRouter.js';
 import './infrastructure/models/teamModel.js'
 import './infrastructure/models/tournamentModel.js'
+import './infrastructure/models/inviteTokenModel.js'
 
+import organizerRouter from './routes/organizerRoutes.js';
 const app = express();
 const port = process.env.PORT || 4000;
 app.use(cors());
@@ -31,8 +34,10 @@ app.use(tournamentRouter);
 
 
 app.use('/api', myRoutes);
-app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 app.use('/teams', teamRouter)
+app.use('/api/organizer', organizerRouter);
+app.use('/api/invites', inviteRouter);
 sequelize
 	.sync() 
 	.then(() => {

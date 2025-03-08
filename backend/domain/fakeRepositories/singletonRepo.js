@@ -1,5 +1,6 @@
-import FakeUserRepository from './fakeUserRepository.js';
+import UserRepositoryImpl from '../../infrastructure/repositories/UserRepositoryImpl.js';
 
-const repository = new FakeUserRepository();
+
+const repository = new UserRepositoryImpl();
 
 export default repository;

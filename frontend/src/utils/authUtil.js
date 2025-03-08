@@ -10,17 +10,32 @@ export default function decodeToken(token){
         );
         return JSON.parse(jsonPayLoad);
     }
-        catch (error) {
-            console.log('Ошибка декодирования токена', error);
-            return null;
-        }
-
+    catch (error) {
+        console.log('Ошибка декодирования токена', error);
+        return null;
     }
+}
 
-export function hasOrganizerAccess(token){
-    const decodedToken = decodeToken(token);
-    if (!decodedToken){
+export async function hasOrganizerAccess(){
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) return false;
+        
+        // Проверяем доступ через API
+        const res = await fetch('http://localhost:4000/api/organizer/profile', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!res.ok) return false;
+        
+        const data = await res.json();
+        return data.role === 'ORGANIZER' || data.role === 'JUDGE';
+    } catch (error) {
+        console.error('Ошибка проверки доступа:', error);
         return false;
     }
-    return decodedToken.role === 'ORGANIZER' || decodedToken.role === 'JUDGE';
 }
