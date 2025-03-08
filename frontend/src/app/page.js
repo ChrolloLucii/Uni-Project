@@ -33,18 +33,6 @@ export default function Home() {
       <main className="flex-grow">
         {isLoggedIn && isOrganizer && (
           <div className="flex justify-end p-4">
-            <Link 
-              href="/dashboard" 
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md mr-2"
-            >
-              Панель управления
-            </Link>
-            <Link 
-              href="/tournamentCreation" 
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
-            >
-              Создать турнир
-            </Link>
           </div>
         )}
         
