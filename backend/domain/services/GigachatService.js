@@ -1,5 +1,5 @@
 import axios from 'axios'
-const gigachatApiKey = process.env.GIGACHAT_API_KEY
+import https from 'https'
 export default class GigachatService {
 	constructor(tournamentRepository, gigachatApiKey) {
 		this.tournamentRepository = tournamentRepository
@@ -36,7 +36,6 @@ export default class GigachatService {
 				allTeams = allTeams.concat(t.teams)
 			}
 		}
-		// Формируем строку со списком команд и рейтингами
 		let teamsInfo = 'Список команд (имя - рейтинг):\n'
 		for (const team of allTeams) {
 			teamsInfo += `${team.name} - ${team.rating}\n`
@@ -53,17 +52,21 @@ ${teamsInfo}
 
 	async _callGigachatApi(prompt) {
 		try {
+            const httpsAgent = new https.Agent({
+							rejectUnauthorized: false, 
+						})
 			const response = await axios.post(
-				'https://api.sber-gigachat.ru/v1/completions',
+				'https://gigachat.devices.sberbank.ru/api/v1/models',
 				{
 					prompt: prompt,
-					max_tokens: 500, 
+					max_tokens: 500,
 				},
 				{
 					headers: {
 						Authorization: `Bearer ${this.gigachatApiKey}`,
-						'Content-Type': 'application/json',
+						Accept: 'application/json',
 					},
+					httpsAgent,
 				}
 			)
 			const text = response.data?.choices?.[0]?.text
