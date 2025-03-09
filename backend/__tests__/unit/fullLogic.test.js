@@ -142,8 +142,6 @@ describe('Полное интеграционное тестирование л�
           expect(match.result).toBe('teamA');
         }
       }
-
-  а
       tournament = await tournamentService.advanceRound(tournament);
 
       expect(tournament.matches.length).toBeGreaterThanOrEqual(1);
