@@ -6,7 +6,7 @@ import FakeTeamRepository from '../../domain/fakeRepositories/fakeTeamRepository
 import FakeUserRepository from '../../domain/fakeRepositories/fakeUserRepository.js';
 import MatchService from '../../domain/services/matchService.js';
 
-// Создадим экземпляры сервисов с ин-мемори репозиториями
+// Создадим экземпляры сервисов с in-memory репозиториями
 const tournamentRepository = new FakeTournamentRepository();
 const teamRepository = new FakeTeamRepository();
 const userRepository = new FakeUserRepository(); // либо singleton репозиторий, если он определён
@@ -16,15 +16,15 @@ const tournamentService = new TournamentService(tournamentRepository, teamReposi
 const teamService = new TeamService(teamRepository);
 const userService = new UserService(userRepository);
 
-describe('Full Backend Logic Integration Tests', () => {
+describe('Полное интеграционное тестирование логики бекенда', () => {
 
-  describe('User Logic', () => {
+  describe('Логика пользователей', () => {
     beforeEach(() => {
       // Для пользователей можно обнулять коллекцию
       userRepository.users = new Map();
     });
     
-    test('should register and retrieve a user', async () => {
+    test('должен зарегистрировать и вернуть пользователя', async () => {
       const userData = { id: 1, role: 'ORGANIZER', nickname: 'OrganizerOne', username: 'org1', password: 'pass', email: 'org1@example.com' };
       const registeredUser = await userService.registerUser(userData);
       expect(registeredUser).toHaveProperty('id', 1);
@@ -33,7 +33,7 @@ describe('Full Backend Logic Integration Tests', () => {
       expect(fetchedUser.username).toBe('org1');
     });
 
-    test('should update and delete a user', async () => {
+    test('должен обновить и удалить пользователя', async () => {
       const userData = { id: 2, role: 'PLAYER', nickname: 'PlayerOne', username: 'player1', password: 'pass', email: 'player1@example.com' };
       await userService.registerUser(userData);
       const updated = await userService.updateUser({ ...userData, nickname: 'PlayerOneUpdated' });
@@ -44,12 +44,12 @@ describe('Full Backend Logic Integration Tests', () => {
     });
   });
 
-  describe('Team Logic', () => {
+  describe('Логика команд', () => {
     beforeEach(() => {
       teamRepository.teams = [];
     });
 
-    test('should create a team and retrieve it', async () => {
+    test('должен создать команду и вернуть её', async () => {
       const teamData = { id: '101', name: 'Team Alpha', rating: 95, players: ['p1', 'p2', 'p3', 'p4', 'p5'] };
       const team = await teamService.createTeam(teamData);
       expect(team).toHaveProperty('id', '101');
@@ -59,7 +59,7 @@ describe('Full Backend Logic Integration Tests', () => {
     });
   });
 
-  describe('Tournament Logic', () => {
+  describe('Логика турнира', () => {
     let tournamentData;
 
     beforeEach(async () => {
@@ -78,14 +78,14 @@ describe('Full Backend Logic Integration Tests', () => {
       };
     });
 
-    test('should create a tournament', async () => {
+    test('должен создать турнир', async () => {
       const tournament = await tournamentService.createTournament(tournamentData);
       expect(tournament).toBeDefined();
       expect(tournament.id).toEqual("1");
       expect(tournamentRepository.tournaments.length).toBe(1);
     });
 
-    test('should add teams and generate matches (with bye if needed)', async () => {
+    test('должен добавить команды и сгенерировать матчи (с учетом bye, если необходимо)', async () => {
       let tournament = await tournamentService.createTournament(tournamentData);
 
       // Добавляем 5 команд – порядок не важен, внутреннее сортирование по рейтингу происходит в генерации матчей
@@ -102,19 +102,19 @@ describe('Full Backend Logic Integration Tests', () => {
       }
       expect(tournament.teams.length).toBe(5);
 
-      // Генерируем матчи – для нечетного количества команд должна быть как минимум одна bye
+  
       tournament = await tournamentService.generateMatches(tournament);
       expect(tournament.matches.length).toBeGreaterThanOrEqual(3);
-      // Проверяем, что bye-мяч (match) создан через фабрику и имеет поле bye === true
+    
       const byeMatch = tournament.matches.find(match => match.result === 'bye');
       expect(byeMatch).toBeDefined();
       expect(byeMatch).toHaveProperty('id');
       expect(byeMatch.result).toBe('bye');
-      // Если byeMatch существует, то его teamB должно быть null
+   
       expect(byeMatch.teamB).toBeNull();
     });
 
-    test('should record match result and advance round', async () => {
+    test('должен зафиксировать результат матча и перейти к следующему раунду', async () => {
       // Создадим турнир и добавим 5 команд
       let tournament = await tournamentService.createTournament(tournamentData);
       const teams = [
@@ -129,15 +129,13 @@ describe('Full Backend Logic Integration Tests', () => {
       }
       tournament = await tournamentService.generateMatches(tournament);
       
-      // Запишем результаты для обычных матчей – для простоты считаем, что победителем становится teamA
-      // (Также bye-матч уже имеет result: 'bye')
       for (const match of tournament.matches) {
         if (match.result === null) {
-          // Убедимся, что мы передаём правильное значение: "teamA"
+ 
           tournament = await tournamentService.recordMatchResult(match.id, 'teamA');
         }
       }
-      // Проверяем, что все обычные матчи стали сыгранными
+
       for (const match of tournament.matches) {
         if (match.result !== 'bye') {
           expect(match.played).toBe(true);
@@ -145,18 +143,19 @@ describe('Full Backend Logic Integration Tests', () => {
         }
       }
 
-      // Переход в следующий раунд – новая сетка генерируется на основе победителей текущего раунда
+  а
       tournament = await tournamentService.advanceRound(tournament);
-      // Если в предыдущем раунде было bye, то в новом раунде должны появиться пары из победителей
+
       expect(tournament.matches.length).toBeGreaterThanOrEqual(1);
-      // Проверяем, что в новом раунде все матчи созданы через фабрику (имеют id)
+   
       tournament.matches.forEach(match => {
         expect(match).toHaveProperty('id');
       });
-      // Также предыдущие матчи должны сохраниться в previousMatches (если настроено такое хранение)
+    
       expect(tournament.previousMatches.length).toBeGreaterThan(0);
     });
-    test('updateTournament should update tournament details', async () => {
+    
+    test('updateTournament должен обновить данные турнира', async () => {
       const tournament = await tournamentService.createTournament(tournamentData);
   
       const updateData = {
@@ -174,7 +173,8 @@ describe('Full Backend Logic Integration Tests', () => {
       expect(new Date(updatedTournament.endDate)).toEqual(new Date(updateData.endDate));
       expect(updatedTournament.status).toBe(updateData.status);
     });
-    test('updateTeams should update teams and regenerate matches', async () => {
+    
+    test('updateTeams должен обновить команды и сгенерировать матчи заново', async () => {
       const tournament = await tournamentService.createTournament(tournamentData);
   
       const teams = [
@@ -187,7 +187,7 @@ describe('Full Backend Logic Integration Tests', () => {
       expect(updatedTournament.matches.length).toBe(1); // 2 команды -> 1 матч
     });
   
-    test('disqualifyTeam should remove team and regenerate matches', async () => {
+    test('disqualifyTeam должен удалить команду и сгенерировать матчи заново', async () => {
       const tournament = await tournamentService.createTournament(tournamentData);
   
       const teams = [
@@ -204,7 +204,8 @@ describe('Full Backend Logic Integration Tests', () => {
       expect(updatedTournament.teams.length).toBe(2);
       expect(updatedTournament.matches.length).toBe(1); // 2 команды -> 1 матч
     });
-    describe('assignJudge', () => {
+    
+    describe('Назначение судьи', () => {
       let tournamentService;
     
       beforeEach(() => {

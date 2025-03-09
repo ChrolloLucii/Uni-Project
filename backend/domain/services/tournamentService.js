@@ -232,7 +232,7 @@ export default class TournamentService {
 		if (!tournament) {
 			throw new Error('Tournament not found')
 		}
-		await this.tournamentRepository.delete(tournamentId)
+		await this.tournamentRepository.deleteTournament(tournamentId)
 	}
 
 	async getTournamentTeams(tournamentId){

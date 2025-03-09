@@ -484,4 +484,74 @@ test('Проверка middleware authMiddleware', async () => {
     
     console.log('Проверка authMiddleware: токен успешно декодирован и данные пользователя добавлены в req.user');
   });
+  // Тест 15: Проверка middleware checkRole
+test('Проверка middleware checkRole', async () => {
+    // Очищаем таблицу токенов перед тестом
+    await InviteTokenModel.destroy({ where: {} });
+    const organizer = await createTestUser({
+      username: 'checkroleorganizer',
+      password: 'password123',
+      role: 'ORGANIZER',
+      nickname: 'Check Role Organizer',
+      email: 'checkrole.org@example.com'
+    });
+    const inviteToken = await InviteTokenModel.create({
+      token: 'test-token-' + Date.now(),
+      organizerId: organizer.id,
+      role: 'JUDGE',
+      used: false
+    });
+    // Регистрируем судью по инвайт-токену
+    const judgeData = {
+      username: 'checkrolejudge',
+      password: 'judge123',
+      nickname: 'Check Role Judge',
+      email: 'checkrole.judge@example.com',
+      token: inviteToken.token
+    };
+    const judgeResponse = await request(app)
+      .post('/api/invites/register-judge')
+      .send(judgeData);
+    expect(judgeResponse.status).toBe(200);
+    console.log('Судья успешно зарегистрирован для теста ролей');
+    // Получаем токены для обоих пользователей
+    const organizerLogin = await request(app)
+      .post('/api/auth/login')
+      .send({
+        username: 'checkroleorganizer',
+        password: 'password123'
+      });
+    
+    const judgeLogin = await request(app)
+      .post('/api/auth/login')
+      .send({
+        username: 'checkrolejudge',
+        password: 'judge123'
+      });
+    expect(organizerLogin.status).toBe(200);
+    expect(judgeLogin.status).toBe(200);
+    const organizerToken = organizerLogin.body.token;
+    const judgeToken = judgeLogin.body.token;
+    // Проверяем доступ организатора к маршруту организатора
+    const organizerAccess = await request(app)
+      .get('/api/organizer/judge-tokens')
+      .set('Authorization', `Bearer ${organizerToken}`);
+    console.log('Ответ при доступе организатора к маршруту организатора:', {
+      status: organizerAccess.status
+    });
+    expect(organizerAccess.status).toBe(200); // Организатор должен иметь доступ
+    // Проверяем доступ судьи к маршруту организатора
+    const judgeAccess = await request(app)
+      .get('/api/organizer/judge-tokens')
+      .set('Authorization', `Bearer ${judgeToken}`);
+    console.log('Ответ при доступе судьи к маршруту организатора:', {
+      status: judgeAccess.status,
+      body: judgeAccess.body
+    });
+    expect(judgeAccess.status).toBe(403); 
+    expect(judgeAccess.body).toHaveProperty('message');
+    expect(judgeAccess.body.message.toLowerCase()).toMatch(/forbidden|запрещено|permissions|доступ|требуется|роль|ролей/i);
+    
+    console.log('Проверка checkRole middleware прошла успешно!');
+  });
 });

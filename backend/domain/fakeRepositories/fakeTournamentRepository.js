@@ -28,4 +28,11 @@ export default class FakeTournamentRepository {
           return tournament.matches && tournament.matches.some(match => match.id === matchId);
         });
       }
+    async deleteTournament(id){
+        const index = this.tournaments.findIndex(t => t.id == id);
+        if (index == -1) {
+            throw new Error('Tournament not found');
+        }
+        this.tournaments.splice(index, 1);
+    }
 }
