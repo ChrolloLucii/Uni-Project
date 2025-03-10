@@ -1,7 +1,7 @@
 import axios from 'axios'
 import https from 'https'
 import querystring from 'querystring'
-import { v4 as uuidv4 } from 'uuid' // Нужно добавить зависимость
+import { v4 as uuidv4 } from 'uuid' 
 
 export default class GigachatService {
     constructor(tournamentRepository, gigachatApiKey) {
@@ -11,68 +11,41 @@ export default class GigachatService {
         this.tokenExpiry = null
     }
 
-	/**
-	 * Обрабатывает сообщение (вопрос) от пользователя.
-	 * 1. Проверяет, относится ли вопрос к теме турниров.
-	 * 2. Если нет — сразу отказывает.
-	 * 3. Если да — собирает данные и вызывает GigaChat API.
-	 */
-	async handleMessage(message) {
-		const isTournamentQuestion = this._checkIfTournamentQuestion(message)
-		if (!isTournamentQuestion) {
-			return 'Извините, я не могу ответить на этот вопрос.'
-		}
-		const context = await this._buildContextForGigaChat(message)
-		const response = await this._callGigachatApi(context)
-		return response
-	}
-
-	_checkIfTournamentQuestion(message) {
-		const lowerMsg = message.toLowerCase()
-		const keywords = ['турнир', 'команд', 'team', 'rating', 'рейтинг']
-		return keywords.some(keyword => lowerMsg.includes(keyword))
-	}
-
-	async _buildContextForGigaChat(userQuestion) {
-		const tournaments = await this.tournamentRepository.getAll() 
-		let allTeams = []
-		for (const t of tournaments) {
-			if (Array.isArray(t.teams)) {
-				allTeams = allTeams.concat(t.teams)
-			}
-		}
-		let teamsInfo = 'Список команд (имя - рейтинг):\n'
-		for (const team of allTeams) {
-			teamsInfo += `${team.name} - ${team.rating}\n`
-		}
-
-		const prompt = `
-Вопрос пользователя: "${userQuestion}"
-У тебя есть данные о командах и их рейтингах:
-${teamsInfo}
-Ответь на вопрос, учитывая эти данные. Если данных не хватает, напиши, что данных недостаточно.
-    `.trim()
-		return prompt
-	}
-	async _getAccessToken() {
+    /**
+     * Обрабатывает сообщение (вопрос) от пользователя.
+     * 1. Проверяет, относится ли вопрос к теме турниров.
+     * 2. Если нет — сразу отказывает.
+     * 3. Если да — собирает данные и вызывает GigaChat API.
+     */
+    async handleMessage(message) {
+        const isTournamentQuestion = this._checkIfTournamentQuestion(message)
+        if (!isTournamentQuestion) {
+            return 'Извините, я не могу ответить на этот вопрос.'
+        }
+        const context = await this._buildContextForGigaChat(message)
+        const response = await this._callGigachatApi(context)
+        return response
+    }
+    async _getAccessToken() {
         try {
+         
+            if (this.accessToken && this.tokenExpiry && this.tokenExpiry > Date.now()) {
+                console.log('Используем существующий токен доступа')
+                return this.accessToken
+            }
+    
+            console.log('Получаем новый токен доступа...')
+            
             const httpsAgent = new https.Agent({
                 rejectUnauthorized: false,
             })
-
-            // Проверяем, есть ли у нас действующий токен
-            if (this.accessToken && this.tokenExpiry && this.tokenExpiry > Date.now()) {
-                return this.accessToken
-            }
-
-            console.log('Получаем новый токен доступа...')
             
-            // Используем querystring для правильного форматирования данных
+       
             const data = querystring.stringify({
                 scope: 'GIGACHAT_API_PERS'
             })
             
-            // Генерируем уникальный идентификатор для запроса
+       
             const rqUID = uuidv4()
             
             const response = await axios.post(
@@ -88,11 +61,11 @@ ${teamsInfo}
                     httpsAgent
                 }
             )
-
+    
             this.accessToken = response.data.access_token
-            // Устанавливаем время жизни токена (с небольшим запасом)
-            const expiresInMs = (response.data.expires_in || 1800) * 1000 // По документации 30 минут (1800 секунд)
-            this.tokenExpiry = Date.now() + expiresInMs - 60000 // Вычитаем минуту для надежности
+          
+            const expiresInMs = (response.data.expires_in || 1800) * 1000 
+            this.tokenExpiry = Date.now() + expiresInMs - 60000 
             
             console.log('Токен доступа успешно получен')
             return this.accessToken
@@ -103,6 +76,124 @@ ${teamsInfo}
                 console.error('Response status:', error.response.status)
             }
             throw new Error('Не удалось получить токен доступа для GigaChat API')
+        }
+    }
+    _checkIfTournamentQuestion(message) {
+        const lowerMsg = message.toLowerCase()
+        const keywords = [
+            'турнир', 'команд', 'team', 'rating', 'рейтинг', 'победител', 
+            'winner', 'чемпион', 'выиграл', 'проиграл', 'лучш', 'сильн', 
+            'mmr', 'best', 'top', 'лидер'
+        ]
+        return keywords.some(keyword => lowerMsg.includes(keyword))
+    }
+
+    async _buildContextForGigaChat(userQuestion) {
+        try {
+            console.log('Запрашиваем данные из репозитория турниров...')
+            const tournaments = await this.tournamentRepository.getAll() 
+            console.log(`Получено ${tournaments ? tournaments.length : 0} турниров`)
+            
+            if (!tournaments || tournaments.length === 0) {
+                return `Вопрос пользователя: "${userQuestion}"\n\nК сожалению, данные о турнирах недоступны.`
+            }
+            
+            let allTeams = []
+            for (const t of tournaments) {
+                if (Array.isArray(t.teams)) {
+                    allTeams = allTeams.concat(t.teams)
+                }
+            }
+            
+            let teamsInfo = 'Список команд (имя - рейтинг):\n'
+            for (const team of allTeams) {
+                if (team && team.name && team.rating !== undefined) {
+                    teamsInfo += `${team.name} - ${team.rating}\n`
+                }
+            }
+            
+    
+            let winnersInfo = 'Информация о завершенных турнирах:\n'
+            
+            for (const tournament of tournaments) {
+                if (!tournament || !tournament.name) continue
+                
+     
+                const lastRoundMatches = tournament.matches?.filter(match => 
+                    match && match.round === tournament.rounds && match.winner
+                ) || []
+                
+                if (lastRoundMatches.length > 0) {
+                    const finalMatch = lastRoundMatches[0]
+                    winnersInfo += `Турнир "${tournament.name}": победитель - ${finalMatch.winner.name} (рейтинг: ${finalMatch.winner.rating})\n`
+                } else if (tournament.status === 'IN_PROGRESS') {
+                    winnersInfo += `Турнир "${tournament.name}": в процессе\n`
+                } else {
+                    winnersInfo += `Турнир "${tournament.name}": победитель не определен\n`
+                }
+            }
+            
+     
+            let predictionsInfo = 'Прогноз результатов по рейтингу MMR команд:\n'
+            for (const tournament of tournaments) {
+                if (!tournament || !tournament.name || !Array.isArray(tournament.teams) || tournament.teams.length === 0) continue
+                
+                if (tournament.status !== 'COMPLETED') {
+
+                    const sortedTeams = [...tournament.teams]
+                        .filter(team => team && team.rating !== undefined)
+                        .sort((a, b) => b.rating - a.rating)
+                    
+                    if (sortedTeams.length > 0) {
+                        const favoriteTeam = sortedTeams[0]
+                        predictionsInfo += `Турнир "${tournament.name}": фаворит - ${favoriteTeam.name} (рейтинг: ${favoriteTeam.rating})\n`
+                        
+                        if (sortedTeams.length > 1) {
+                            const secondTeam = sortedTeams[1]
+                            predictionsInfo += `  Второй по силе - ${secondTeam.name} (рейтинг: ${secondTeam.rating})\n`
+                        }
+                    }
+                }
+            }
+            
+
+            const topTeams = [...allTeams]
+                .filter(team => team && team.name && team.rating !== undefined)
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 5)
+            
+            let topTeamsInfo = 'Топ команды по рейтингу MMR:\n'
+            topTeams.forEach((team, index) => {
+                topTeamsInfo += `${index + 1}. ${team.name} - ${team.rating}\n`
+            })
+    
+            const prompt = `
+    Вопрос пользователя: "${userQuestion}"
+    
+    У тебя есть следующие данные:
+    
+    1. ${teamsInfo}
+    
+    2. ${winnersInfo}
+    
+    3. ${predictionsInfo}
+    
+    4. ${topTeamsInfo}
+    
+    ВАЖНО: Чем выше рейтинг (MMR) команды, тем она сильнее. Рейтинг напрямую отражает силу и качество команды.
+    В незавершенных турнирах наиболее вероятным победителем считается команда с самым высоким рейтингом.
+    Победителем турнира считается команда, выигравшая матчи последнего раунда.
+    
+    Ответь на вопрос пользователя, опираясь на эти данные. Если спрашивают о лучших командах или о фаворитах - это всегда команды с самым высоким MMR.
+    Если данных не хватает, делай прогноз на основе MMR команд.
+    `.trim()
+    
+            console.log('Контекст для GigaChat успешно сформирован')
+            return prompt
+            
+        } catch (error) {
+            console.error('Ошибка при формировании контекста:', error)
+            return `Вопрос пользователя: "${userQuestion}"\n\nПроизошла ошибка при обработке данных: ${error.message}`
         }
     }
 
@@ -120,7 +211,10 @@ ${teamsInfo}
                 {
                     model: "GigaChat:latest",
                     messages: [
-                        { role: "system", content: "Ты - ассистент по турнирам и командам." },
+                        { 
+                            role: "system", 
+                            content: "Ты - ассистент по турнирам и командам. Ты понимаешь, что команды с более высоким рейтингом (MMR) считаются более сильными и лучшими." 
+                        },
                         { role: "user", content: prompt }
                     ],
                     temperature: 0.7,
