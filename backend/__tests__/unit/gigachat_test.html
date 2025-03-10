@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GigaChat Test</title>
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>GigaChat Test</h1>
+  <input id="msgInput" type="text" placeholder="Вопрос..."/>
+  <button id="sendBtn">Отправить</button>
+  <div id="chat"></div>
+
+  <script>
+    const socket = io("http://localhost:4000/gigachat");
+    socket.on("connect", () => {
+      console.log("Connected to GigaChat WS");
+    });
+
+    socket.on("message", (data) => {
+      const chatDiv = document.getElementById("chat");
+      const p = document.createElement("p");
+      p.textContent = "GigaChat: " + data;
+      chatDiv.appendChild(p);
+    });
+
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      const msg = document.getElementById("msgInput").value;
+      socket.emit("message", msg);
+    });
+  </script>
+</body>
+</html>

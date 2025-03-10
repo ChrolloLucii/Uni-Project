@@ -9,15 +9,20 @@
         "test:watch" : "jest --watch --runInband"
     },
     "dependencies": {
+        "axios": "^1.8.1",
         "bcrypt": "^5.1.1",
         "body-parser": "^1.20.3",
         "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "env": "^0.0.2",
         "express": "^4.21.2",
         "jsonwebtoken": "^9.0.2",
         "pg": "^8.13.3",
         "pg-hstore": "^2.3.4",
         "reflect-metadata": "^0.2.2",
         "sequelize": "^6.37.5",
+        "socket.io": "^4.8.1",
+        "soket.io": "^0.0.1-security",
         "typeorm": "^0.3.20",
         "typescript": "^5.7.3",
         "ws": "^8.18.0"
