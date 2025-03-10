@@ -39,8 +39,7 @@ app.use('/teams', teamRouter)
 const httpServer = http.createServer(app)
 
 const tournamentRepository = new TournamentRepositoryImpl()
-const gigachatApiKey =
-	'Njg1ZjQ4ODMtOTVkMS00Yjc3LTkyNmEtMGU0M2M5MGNiODYxOmZlZTJjNzY2LTQ5ZjQtNDNmNC04ZDkzLTY1OWM1NGJlNTZjYw=='
+const gigachatApiKey = 'YzY3MTczMDgtMTY0Yy00YzkxLTlkZjEtYTA4ZjNiZmNlMTAyOmJjNWIxMWQxLWNhZmUtNGJhMC1hZGUwLTY2YzNlZmNlYjNjYw=='
 const gigachatService = new GigachatService(tournamentRepository,gigachatApiKey)
 
 initGigachatSocket(httpServer, gigachatService)
