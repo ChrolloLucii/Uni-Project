@@ -1,146 +1,115 @@
-/* Общий контейнер сетки – раунды располагаются горизонтально */
 .tournament-bracket-container {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    padding: 20px;
-    overflow-x: auto;
-    background: #1e1e1e;
-  }
-  
-  /* Каждый раунд – вертикально с заголовком */
-  .round-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 220px;
-  }
-  
-  .round-title {
-    font-size: 1.2rem;
-    color: #ffffff;
-    margin-bottom: 10px;
-  }
-  
-  /* Карточка матча — фиксированная ширина, отступы и тень */
-  .match-card {
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 8px;
-    margin-bottom: 20px;
-    width: 200px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  /* Стили для команд */
-  .team {
-    padding: 8px;
-    margin: 4px 0;
-    border-radius: 4px;
-    text-align: center;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .team:hover {
-    background: #e0e0e0;
-  }
-  
-  /* Отмеченные победители */
-  .winner {
-    background: #a8e4a0 !important;
-    font-weight: bold;
-    color: #333;
-  }
-  .tbd-team {
-    opacity: 0.6;
-    font-style: italic;
-  }
-  
-  .placeholder-match {
-    border: 1px dashed rgba(255, 255, 255, 0.3);
-  }
-  
-  .predictable:hover {
-    cursor: pointer;
-    background-color: rgba(255, 141, 10, 0.2);
-  }
-  
-  .prediction-mark {
-    color: #FF8D0A;
-    font-weight: bold;
-  }
-  .bracketContainer {
-    display: flex;
-    overflow-x: auto;
-    padding: 20px;
-    gap: 40px;
-  }
-  
-  .round {
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .roundTitle {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #e2e8f0;
-    font-weight: 600;
-  }
-  
-  .matchesContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .match {
-    background: #2d3748;
-    border: 1px solid #4a5568;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .placeholder {
-    border: 1px dashed #4a5568;
-    opacity: 0.7;
-  }
-  
-  .team {
-    padding: 10px;
-    border-bottom: 1px solid #4a5568;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .team:last-child {
-    border-bottom: none;
-  }
-  
-  .winner {
-    background-color: rgba(72, 187, 120, 0.2);
-    font-weight: bold;
-  }
-  
-  .tbdTeam {
-    color: #a0aec0;
-    font-style: italic;
-  }
-  
-  .clickable {
-    cursor: pointer;
-    transition: background-color 0.15s;
-  }
-  
-  .clickable:hover {
-    background-color: rgba(66, 153, 225, 0.15);
-  }
-  
-  .predictionMark {
-    color: #ed8936;
-    margin-left: 5px;
-  }
+  display: flex;
+  overflow-x: auto; /* Keep this to allow scrolling for large brackets */
+  padding: 20px 0;
+  min-height: 500px;
+  position: relative; /* Add this to contain absolute positioned elements */
+}
+
+.round-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  margin-right: 40px;
+  position: relative; /* Add this to contain connection lines */
+}
+
+.round-title {
+  text-align: center;
+  margin-bottom: 15px;
+  color: white;
+  font-weight: bold;
+}
+
+.matchesContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-around;
+}
+
+/* This is the key rule for proper vertical alignment */
+.round-container:not(:first-child) .matchesContainer {
+  padding: var(--round-padding) 0;
+}
+
+.match-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 80px;
+  width: 100%;
+}
+
+.team {
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.team:first-child {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.team.winner {
+  background-color: #e6f7e6;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.tbd-team {
+  color: #9e9e9e;
+  font-style: italic;
+  cursor: not-allowed;
+}
+
+.placeholder-match {
+  opacity: 0.6;
+  background-color: #f5f5f5;
+}
+
+.predictable:hover {
+  background-color: #f0f7ff;
+}
+
+.prediction-mark {
+  color: #ffc107;
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+/* Connection lines */
+.match-card::after {
+  content: '';
+  position: absolute;
+  right: -40px; /* Keep the same value as margin-right on round-container */
+  top: 50%;
+  width: 40px; /* Match the margin-right on round-container */
+  height: 2px;
+  background-color: #ccc;
+  z-index: 1;
+}
+
+.round-container:last-child .match-card::after {
+  display: none;
+}
+.round-container:last-child {
+  margin-right: 0;
+}
+/* Vertical connection lines */
+.match-connector {
+  position: absolute;
+  right: -40px; /* Change from -40px to -20px to stay within margin area */
+  width: 2px;
+  background-color: #ccc;
+  z-index: 1;
+}
+
+.round-container:last-child .match-connector {
+  display: none;
+}
