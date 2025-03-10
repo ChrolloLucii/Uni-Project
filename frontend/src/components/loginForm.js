@@ -49,18 +49,19 @@ export default function LoginForm({onLogin}){
             <form onSubmit={handleSubmit}>
                 <div>
                     <div className="bg-black bg-opacity-70 p- rounded-lg text-center">
-                        <h1 className="text-2xl text-[#FF8D0A] mb-4">Добро пожаловать</h1>
-                        <p className="text-sm mb-6">Уважаемый организатор, введите Логин и пароль, который вы получили от Админа</p>
+                        <h1 className="text-2xl text-[#f44e1c] mb-4">Добро пожаловать</h1>
+                        <p className="text-md mb-6">Уважаемый организатор, введите Логин и пароль, который вы получили от Админа</p>
+                        <p className="text-sm mb-6 text-[#a8e4a0]">Если вы - судья, введите валидные данные</p>
                     </div>
                     <label>
-                        <input className="w-full p-4 mb-4 bg-gray-800 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        <input className="w-full p-4 mb-4 bg-[#1C223A] text-[#E5D4B6] rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
                             placeholder="Username"
                         />
                     </label>
                     <label>
-                        <input className="w-full p-4 mb-4 bg-gray-800 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        <input className="w-full p-4 mb-4 bg-[#1C223A] text-[#E5D4B6] rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -69,8 +70,8 @@ export default function LoginForm({onLogin}){
                     </label>
                 </div>
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button className='w-full p-4 bg-[#FF8D0A] text-black rounded-lg font-semibold text-lg hover:bg-orange-600 transition duration-300' type="submit">Вход</button>
+                {error && <p style={{ color: '#ff8243' }}>{error}</p>}
+                <button className='w-full p-4 bg-[#f44e1c] text-black rounded-lg font-semibold text-lg hover:bg-orange-600 transition duration-300' type="submit">Вход</button>
             </form>
         </div>
     );

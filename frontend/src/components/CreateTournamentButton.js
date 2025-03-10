@@ -34,7 +34,7 @@ export default function CreateTournamentButton({ className }) {
   }
 
   // Основные стили кнопки
-  const buttonStyles = className || "px-5 py-2 bg-[#FF8D0A] hover:bg-[#e57800] text-white rounded-md transition-colors";
+  const buttonStyles = className || "px-5 py-2 bg-[#f44e1c] hover:bg-[#e57800] text-white rounded-md transition-colors";
 
   return (
     <button 

@@ -385,7 +385,7 @@ export default function ManageTournamentPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center">
       <Header />
       
       <main className="flex-grow px-4 py-8">
@@ -402,7 +402,7 @@ export default function ManageTournamentPage() {
             {/* Левая колонка - Управление командами */}
             <div className="xl:col-span-1 space-y-6">
               {/* Карточка с формой добавления команды */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Добавление команды
                 </h2>
@@ -451,7 +451,7 @@ export default function ManageTournamentPage() {
                   </div>
                   <button 
                     type="submit" 
-                    className="w-full py-2.5 px-5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full py-2.5 px-5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     Добавить команду
                   </button>
@@ -459,7 +459,7 @@ export default function ManageTournamentPage() {
               </div>
               
               {/* Карточка со списком команд */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Команды в турнире <span className="text-gray-400">({teams.length})</span>
                 </h2>
@@ -484,7 +484,7 @@ export default function ManageTournamentPage() {
               </div>
               
               {/* Кнопка генерации матчей */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Генерация матчей
                 </h2>
@@ -501,7 +501,7 @@ export default function ManageTournamentPage() {
             
             {/* Правая колонка - Турнирная сетка */}
             <div className="xl:col-span-2">
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Управление сеткой турнира
                 </h2>
@@ -520,7 +520,7 @@ export default function ManageTournamentPage() {
                         className={`px-4 py-2 text-white text-sm rounded-lg transition ${
                           predictedMode || !canAdvanceRound() 
                             ? 'bg-gray-600 cursor-not-allowed opacity-60' 
-                            : 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-indigo-600 hover:bg-indigo-700'
                         }`}
                         title={
                           predictedMode 
@@ -550,7 +550,7 @@ export default function ManageTournamentPage() {
                         <div className="flex gap-2">
                           <button 
                             onClick={resetPredictions}
-                            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md transition"
+                            className="px-3 py-1.5 hover: hover:bg-[#b94432] bg-[#e1523d] text-white text-sm rounded-md transition"
                           >
                             Сбросить
                           </button>
@@ -566,7 +566,7 @@ export default function ManageTournamentPage() {
                   </div>
                   
                   {predictedMode && (
-                    <div className="mt-3 p-3 bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-200 rounded-md">
+                    <div className="mt-3 p-3 bg-[#1c223a] bg-opacity-30 border border-[#f44e1c] text-white rounded-md">
                       <p className="text-sm">
                         В режиме прогноза вы можете выбирать победителей, не отправляя данные на сервер.
                         Нажмите на команду в матче, чтобы отметить её как победителя.
@@ -577,7 +577,7 @@ export default function ManageTournamentPage() {
               </div>
               
               {/* Турнирная сетка */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 overflow-x-auto">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6 overflow-x-auto">
                 <TournamentBracket
                   rounds={rounds}
                   onSelectWinner={handleSelectWinner}
