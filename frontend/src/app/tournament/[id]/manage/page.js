@@ -240,42 +240,41 @@ export default function ManageTournamentPage() {
     console.log(`Выбран победитель матча ${matchId}: команда ${teamId}`);
     
     if (!predictedMode) {
-      try {
-    
-        const currentMatch = rounds.flatMap(round => round.matches).find(m => m.id === matchId);
-        if (!currentMatch) throw new Error("Матч не найден");
-        
-
-        let result;
-        if (currentMatch.teamA.id === teamId) {
-          result = "teamA";
-        } else if (currentMatch.teamB.id === teamId) {
-          result = "teamB";
-        } else {
-          throw new Error("Некорректное значение teamId");
+        try {
+            // Находим информацию о матче
+            const currentMatch = rounds.flatMap(round => round.matches).find(m => m.id === matchId);
+            if (!currentMatch) throw new Error("Матч не найден");
+            
+            // Определяем результат
+            let result;
+            if (currentMatch.teamA.id === teamId) {
+                result = "teamA";
+            } else if (currentMatch.teamB.id === teamId) {
+                result = "teamB";
+            } else {
+                throw new Error("Некорректное значение teamId");
+            }
+            
+            // Отправляем результат на сервер
+            const res = await fetch(`http://localhost:4000/api/matches/${matchId}/record-result`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ result })
+            });
+            
+            if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
+            
+            // Получаем обновленный турнир с сервера (включая возможное продвижение раунда)
+            const updatedTournament = await res.json();
+            
+            // Обновляем состояние на основе полученных данных
+            const updatedRounds = transformMatchesToBracket(updatedTournament);
+            setRounds(updatedRounds);
+            setOriginalRounds(updatedRounds);
+        } catch (error) {
+            console.error("Ошибка при выборе победителя:", error);
+            alert(`Ошибка: ${error.message}`);
         }
-        
- 
-        const res = await fetch(`http://localhost:4000/api/matches/${matchId}/record-result`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ result })
-        });
-        
-        if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
-        const updatedTournament = await res.json();
-        
-  
-        if (updatedTournament) {
-          const updatedRounds = transformMatchesToBracket(updatedTournament);
-          setRounds(updatedRounds);
-
-          setOriginalRounds(updatedRounds);
-        }
-      } catch (error) {
-        console.error("Ошибка при выборе победителя:", error);
-        alert(`Ошибка: ${error.message}`);
-      }
     } else {
     
       let foundMatchInfo = null;
@@ -514,25 +513,27 @@ export default function ManageTournamentPage() {
                         Текущий раунд: {getCurrentRoundNumber()}
                       </span>
                       
-                      <button 
+                      {rounds.length > 1 && tournamentWinner === null && (
+                    <button 
                         onClick={handleAdvanceRound}
                         disabled={predictedMode || !canAdvanceRound()}
                         className={`px-4 py-2 text-white text-sm rounded-lg transition ${
-                          predictedMode || !canAdvanceRound() 
-                            ? 'bg-gray-600 cursor-not-allowed opacity-60' 
-                            : 'bg-indigo-600 hover:bg-indigo-700'
+                            predictedMode || !canAdvanceRound() 
+                                ? 'bg-gray-600 cursor-not-allowed opacity-60' 
+                                : 'bg-indigo-600 hover:bg-indigo-700'
                         }`}
                         title={
-                          predictedMode 
-                            ? "Недоступно в режиме прогноза" 
-                            : !canAdvanceRound() 
-                              ? "Завершите все матчи текущего раунда" 
-                              : "Перейти к следующему раунду"
+                            predictedMode 
+                                ? "Недоступно в режиме прогноза" 
+                                : !canAdvanceRound() 
+                                    ? "Завершите все матчи текущего раунда" 
+                                    : "Перейти к следующему раунду вручную"
                         }
-                      >
-                        Перейти к следующему раунду
-                      </button>
-                    </div>
+                    >
+                        Перейти к следующему раунду вручную
+                    </button>
+                )}
+                                    </div>
                     
                     {/* Управление режимом прогноза */}
                     <div className="flex flex-wrap items-center gap-3">
