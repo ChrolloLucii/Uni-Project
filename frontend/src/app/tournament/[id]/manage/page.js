@@ -72,7 +72,7 @@ function transformMatchesToBracket(tournament) {
 
 export default function ManageTournamentPage() {
   const { id } = useParams();
-  const [newTeam, setNewTeam] = useState({ id: "", name: "", rating: "", players: [] });
+  const [newTeam, setNewTeam] = useState({name: "", rating: "", players: [] });
   const [teams, setTeams] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [predictedMode, setPredictedMode] = useState(false);
@@ -218,16 +218,16 @@ export default function ManageTournamentPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: newTeam.id,
           name: newTeam.name,
-          rating: Number(newTeam.rating)
+          rating: Number(newTeam.rating),
+          players : newTeam.players
         })
       });
       if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
       const updatedTournament = await res.json();
       console.log("Команда добавлена", updatedTournament);
       setTeams(updatedTournament.teams || []);
-      setNewTeam({ id: "", name: "", rating: "", players: [] });
+      setNewTeam({name: "", rating: "", players: [] });
       alert("Команда добавлена");
     } catch (error) {
       console.error(error);
@@ -406,20 +406,6 @@ export default function ManageTournamentPage() {
                   Добавление команды
                 </h2>
                 <form onSubmit={handleAddTeam}>
-                  <div className="mb-4">
-                    <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="id">
-                      ID команды
-                    </label>
-                    <input
-                      type="text"
-                      id="id"
-                      name="id"
-                      value={newTeam.id}
-                      onChange={handleTeamChange}
-                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
                   <div className="mb-4">
                     <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="name">
                       Название команды
