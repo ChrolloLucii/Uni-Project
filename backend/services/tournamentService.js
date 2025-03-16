@@ -50,8 +50,7 @@ const TournamentServiceApp = {
 
 	async recordMatchResult(matchId, result) {
 		try {
-			const updatedTournament =
-				await tournamentServiceInstance.recordMatchResult(matchId, result)
+			const updatedTournament = await tournamentServiceInstance.recordMatchResult(matchId, result);
 			return updatedTournament
 		} catch (error) {
 			throw new Error(error.message)

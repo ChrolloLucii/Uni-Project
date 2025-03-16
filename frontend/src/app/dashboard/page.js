@@ -116,11 +116,11 @@ export default function OrganizerDashboard() {
     });
   };
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen">
+  if (loading) return <div className="flex items-center justify-center min-h-screen bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center">
     <div className="text-2xl font-semibold text-white">Загрузка...</div>
   </div>;
 
-  if (error) return <div className="flex flex-col items-center justify-center min-h-screen">
+  if (error) return <div className="flex flex-col items-center justify-center min-h-screen bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center">
     <div className="text-xl font-semibold text-red-500 mb-4">Ошибка: {error}</div>
     <button 
       onClick={() => router.push('/login')}
@@ -131,32 +131,32 @@ export default function OrganizerDashboard() {
   </div>;
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
+    <div className="min-h-screen bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center p-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-white">Панель управления организатора: {organizerName}</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Секция управления турнирами */}
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <div className="bg-[#1c223a] bg-opacity-90 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold mb-4 text-white">Мои турниры</h2>
             <div className="flex justify-end mb-4">
               <button
                 onClick={() => router.push('/tournamentCreation')}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
+                className="px-4 py-2 bg-[#f44e1c] hover:bg-[#f5dbbe] text-white hover:text-black rounded-md"
               >
                 Создать новый турнир
               </button>
             </div>
-            <p className="text-gray-400">Перейдите на главную страницу, чтобы увидеть список всех турниров</p>
+            <p className="text-gray-300">Перейдите на главную страницу, чтобы увидеть список всех турниров</p>
           </div>
           
           {/* Секция управления судьями */}
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <div className="bg-[#1c223a] bg-opacity-90 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold mb-4 text-white">Управление судьями</h2>
             <div className="flex justify-end mb-4">
               <button
                 onClick={generateToken}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+                className="px-4 py-2 bg-[#f44e1c] hover:bg-[#f5dbbe] text-white hover:text-black rounded-md"
                 disabled={loading}
               >
                 {loading ? "Создание..." : "Сгенерировать приглашение для судьи"}
@@ -164,18 +164,18 @@ export default function OrganizerDashboard() {
             </div>
             
             {inviteTokens.length === 0 ? (
-              <p className="text-gray-400">Нет активных приглашений для судей</p>
+              <p className="text-gray-300">Нет активных приглашений для судей</p>
             ) : (
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-white">Активные приглашения:</h3>
                 {inviteTokens.map((token) => (
-                  <div key={token.id} className="bg-gray-700 p-4 rounded-md">
+                  <div key={token.id} className="bg-[#c3c3c3] bg-opacity-90 p-4 rounded-md">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                       <div className="mb-2 sm:mb-0">
-                        <p className="text-sm text-gray-300">
+                        <p className="text-sm text-black">
                           Создано: {new Date(token.createdAt).toLocaleDateString()}
                         </p>
-                        <p className="text-sm text-gray-300">
+                        <p className="text-sm text-black">
                           Статус: {token.used ? 'Использовано' : 'Активно'}
                         </p>
                       </div>
@@ -184,7 +184,7 @@ export default function OrganizerDashboard() {
                           onClick={() => copyInviteLink(token.token)}
                           className={`px-3 py-1 rounded text-sm ${
                             copiedLink === token.token
-                              ? 'bg-green-600 text-white'
+                              ? 'bg-gray-700 text-white'
                               : 'bg-gray-600 text-white hover:bg-gray-500'
                           }`}
                         >
@@ -192,14 +192,14 @@ export default function OrganizerDashboard() {
                         </button>
                         <button
                           onClick={() => deleteToken(token.id)}
-                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm"
+                          className="px-3 py-1 bg-[#1c223a] hover:bg-[#151827] text-white rounded text-sm"
                           disabled={token.used}
                         >
                           Удалить
                         </button>
                       </div>
                     </div>
-                    <div className="mt-2 bg-gray-800 p-2 rounded text-gray-300 text-xs font-mono break-all">
+                    <div className="mt-2 bg-black p-2 rounded text-gray-300 text-xs font-mono break-all">
                       {token.token}
                     </div>
                   </div>

@@ -46,22 +46,22 @@ export default function Header() {
             height={49}
           />
         </Link>
-        <h2 className="text-4xl text-white col-start-4 col-span-2 mx-auto">
+        <h2 className="text-4xl col-start-4 col-span-2 mx-auto">
           Турниры
         </h2>
-        <h2 className="text-4xl text-white col-start-8 col-span-2 mx-auto">
+        <h2 className="text-4xl col-start-8 col-span-2 mx-auto">
           Девлог
         </h2>
         
         <div className="col-start-12">
           {isLoggedIn ? (
             <div className="flex items-center space-x-2">
-              <span className="text-white text-sm">{username}</span>
+              <span className="text-white text-md">{username}</span>
               
               {isOrganizer && (
                 <Link 
                   href="/dashboard" 
-                  className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm"
+                  className="px-3 py-1 bg-[#1c223a] hover:bg-[#151827] rounded text-white text-sm"
                 >
                   Панель
                 </Link>
@@ -69,7 +69,7 @@ export default function Header() {
               
               <button
                 onClick={handleLogout}
-                className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white text-sm"
+                className="px-3 py-1 bg-[#e1523d] hover:bg-red-700 rounded text-white text-sm"
               >
                 Выход
               </button>
@@ -77,7 +77,7 @@ export default function Header() {
           ) : (
             <Link 
               href="/login" 
-              className="px-4 py-2 bg-[#FF8D0A] hover:bg-[#f5dbbe] hover:text-black text-white rounded-md"
+              className="px-4 py-2 bg-[#f44e1c] hover:bg-[#f5dbbe] hover:text-black text-white rounded-md"
             >
               Вход
             </Link>

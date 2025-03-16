@@ -72,7 +72,7 @@ function transformMatchesToBracket(tournament) {
 
 export default function ManageTournamentPage() {
   const { id } = useParams();
-  const [newTeam, setNewTeam] = useState({ id: "", name: "", rating: "", players: [] });
+  const [newTeam, setNewTeam] = useState({name: "", rating: "", players: [] });
   const [teams, setTeams] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [predictedMode, setPredictedMode] = useState(false);
@@ -218,16 +218,16 @@ export default function ManageTournamentPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: newTeam.id,
           name: newTeam.name,
-          rating: Number(newTeam.rating)
+          rating: Number(newTeam.rating),
+          players : newTeam.players
         })
       });
       if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
       const updatedTournament = await res.json();
       console.log("Команда добавлена", updatedTournament);
       setTeams(updatedTournament.teams || []);
-      setNewTeam({ id: "", name: "", rating: "", players: [] });
+      setNewTeam({name: "", rating: "", players: [] });
       alert("Команда добавлена");
     } catch (error) {
       console.error(error);
@@ -240,42 +240,41 @@ export default function ManageTournamentPage() {
     console.log(`Выбран победитель матча ${matchId}: команда ${teamId}`);
     
     if (!predictedMode) {
-      try {
-    
-        const currentMatch = rounds.flatMap(round => round.matches).find(m => m.id === matchId);
-        if (!currentMatch) throw new Error("Матч не найден");
-        
-
-        let result;
-        if (currentMatch.teamA.id === teamId) {
-          result = "teamA";
-        } else if (currentMatch.teamB.id === teamId) {
-          result = "teamB";
-        } else {
-          throw new Error("Некорректное значение teamId");
+        try {
+            // Находим информацию о матче
+            const currentMatch = rounds.flatMap(round => round.matches).find(m => m.id === matchId);
+            if (!currentMatch) throw new Error("Матч не найден");
+            
+            // Определяем результат
+            let result;
+            if (currentMatch.teamA.id === teamId) {
+                result = "teamA";
+            } else if (currentMatch.teamB.id === teamId) {
+                result = "teamB";
+            } else {
+                throw new Error("Некорректное значение teamId");
+            }
+            
+            // Отправляем результат на сервер
+            const res = await fetch(`http://localhost:4000/api/matches/${matchId}/record-result`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ result })
+            });
+            
+            if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
+            
+            // Получаем обновленный турнир с сервера (включая возможное продвижение раунда)
+            const updatedTournament = await res.json();
+            
+            // Обновляем состояние на основе полученных данных
+            const updatedRounds = transformMatchesToBracket(updatedTournament);
+            setRounds(updatedRounds);
+            setOriginalRounds(updatedRounds);
+        } catch (error) {
+            console.error("Ошибка при выборе победителя:", error);
+            alert(`Ошибка: ${error.message}`);
         }
-        
- 
-        const res = await fetch(`http://localhost:4000/api/matches/${matchId}/record-result`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ result })
-        });
-        
-        if (!res.ok) throw new Error(`Ошибка: ${res.status}`);
-        const updatedTournament = await res.json();
-        
-  
-        if (updatedTournament) {
-          const updatedRounds = transformMatchesToBracket(updatedTournament);
-          setRounds(updatedRounds);
-
-          setOriginalRounds(updatedRounds);
-        }
-      } catch (error) {
-        console.error("Ошибка при выборе победителя:", error);
-        alert(`Ошибка: ${error.message}`);
-      }
     } else {
     
       let foundMatchInfo = null;
@@ -385,7 +384,7 @@ export default function ManageTournamentPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900">
+    <div className="flex flex-col min-h-screen bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center">
       <Header />
       
       <main className="flex-grow px-4 py-8">
@@ -402,25 +401,11 @@ export default function ManageTournamentPage() {
             {/* Левая колонка - Управление командами */}
             <div className="xl:col-span-1 space-y-6">
               {/* Карточка с формой добавления команды */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Добавление команды
                 </h2>
                 <form onSubmit={handleAddTeam}>
-                  <div className="mb-4">
-                    <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="id">
-                      ID команды
-                    </label>
-                    <input
-                      type="text"
-                      id="id"
-                      name="id"
-                      value={newTeam.id}
-                      onChange={handleTeamChange}
-                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
                   <div className="mb-4">
                     <label className="block mb-1 text-sm font-medium text-gray-300" htmlFor="name">
                       Название команды
@@ -451,7 +436,7 @@ export default function ManageTournamentPage() {
                   </div>
                   <button 
                     type="submit" 
-                    className="w-full py-2.5 px-5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full py-2.5 px-5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     Добавить команду
                   </button>
@@ -459,7 +444,7 @@ export default function ManageTournamentPage() {
               </div>
               
               {/* Карточка со списком команд */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Команды в турнире <span className="text-gray-400">({teams.length})</span>
                 </h2>
@@ -484,7 +469,7 @@ export default function ManageTournamentPage() {
               </div>
               
               {/* Кнопка генерации матчей */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Генерация матчей
                 </h2>
@@ -501,7 +486,7 @@ export default function ManageTournamentPage() {
             
             {/* Правая колонка - Турнирная сетка */}
             <div className="xl:col-span-2">
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4 text-white border-b border-gray-700 pb-2">
                   Управление сеткой турнира
                 </h2>
@@ -514,25 +499,27 @@ export default function ManageTournamentPage() {
                         Текущий раунд: {getCurrentRoundNumber()}
                       </span>
                       
-                      <button 
+                      {rounds.length > 1 && tournamentWinner === null && (
+                    <button 
                         onClick={handleAdvanceRound}
                         disabled={predictedMode || !canAdvanceRound()}
                         className={`px-4 py-2 text-white text-sm rounded-lg transition ${
-                          predictedMode || !canAdvanceRound() 
-                            ? 'bg-gray-600 cursor-not-allowed opacity-60' 
-                            : 'bg-blue-600 hover:bg-blue-700'
+                            predictedMode || !canAdvanceRound() 
+                                ? 'bg-gray-600 cursor-not-allowed opacity-60' 
+                                : 'bg-indigo-600 hover:bg-indigo-700'
                         }`}
                         title={
-                          predictedMode 
-                            ? "Недоступно в режиме прогноза" 
-                            : !canAdvanceRound() 
-                              ? "Завершите все матчи текущего раунда" 
-                              : "Перейти к следующему раунду"
+                            predictedMode 
+                                ? "Недоступно в режиме прогноза" 
+                                : !canAdvanceRound() 
+                                    ? "Завершите все матчи текущего раунда" 
+                                    : "Перейти к следующему раунду вручную"
                         }
-                      >
-                        Перейти к следующему раунду
-                      </button>
-                    </div>
+                    >
+                        Перейти к следующему раунду вручную
+                    </button>
+                )}
+                                    </div>
                     
                     {/* Управление режимом прогноза */}
                     <div className="flex flex-wrap items-center gap-3">
@@ -550,7 +537,7 @@ export default function ManageTournamentPage() {
                         <div className="flex gap-2">
                           <button 
                             onClick={resetPredictions}
-                            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md transition"
+                            className="px-3 py-1.5 hover: hover:bg-[#b94432] bg-[#e1523d] text-white text-sm rounded-md transition"
                           >
                             Сбросить
                           </button>
@@ -566,7 +553,7 @@ export default function ManageTournamentPage() {
                   </div>
                   
                   {predictedMode && (
-                    <div className="mt-3 p-3 bg-blue-900 bg-opacity-30 border border-blue-800 text-blue-200 rounded-md">
+                    <div className="mt-3 p-3 bg-[#1c223a] bg-opacity-30 border border-[#f44e1c] text-white rounded-md">
                       <p className="text-sm">
                         В режиме прогноза вы можете выбирать победителей, не отправляя данные на сервер.
                         Нажмите на команду в матче, чтобы отметить её как победителя.
@@ -577,7 +564,7 @@ export default function ManageTournamentPage() {
               </div>
               
               {/* Турнирная сетка */}
-              <div className="bg-gray-800 rounded-lg shadow-lg p-6 overflow-x-auto">
+              <div className="bg-[#1c223a] rounded-lg shadow-lg p-6 overflow-x-auto">
                 <TournamentBracket
                   rounds={rounds}
                   onSelectWinner={handleSelectWinner}

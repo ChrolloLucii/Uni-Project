@@ -97,8 +97,8 @@ export default function JudgeRegistration() {
   </div>;
 
   return (
-    <div className="flex min-h-screen bg-gray-900 items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg">
+    <div className="flex min-h-screen bg-[url('/circle-scatter-haikei.svg')] bg-cover bg-center items-center justify-center p-4">
+      <div className="w-full max-w-md bg-[#1c223a] p-8 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-6 text-white">Регистрация судьи</h1>
         
         {error && (
@@ -163,7 +163,7 @@ export default function JudgeRegistration() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
+            className="w-full py-2 px-4 hover:bg-[#b94432] bg-[#e1523d] text-white font-medium rounded-lg"
           >
             {loading ? 'Регистрация...' : 'Зарегистрироваться'}
           </button>

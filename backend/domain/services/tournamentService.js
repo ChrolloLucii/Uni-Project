@@ -66,9 +66,17 @@ export default class TournamentService {
 		if (!match) {
 			throw new Error('Match not found')
 		}
+		const currentRound = match.round;
+
 		match.result = result
 		match.played = true
 		const updatedTournament = await this.tournamentRepository.update(tournament)
+		const currentRoundMatches = updatedTournament.matches.filter(
+			m=> m.round === currentRound);
+		const allMatchesPlayed = currentRoundMatches.every(m => m.played);
+		if (allMatchesPlayed && currentRoundMatches.length > 1) {
+			await this.advanceRound(updatedTournament);
+		}
 		return updatedTournament
 	}
 
