@@ -43,7 +43,7 @@ sequelize
 	.then(() => {
 		console.log('База данных успешно синхронизирована')
 		app.listen(port, () => {
-			console.log('Server is running on port localhost' + port)
+			console.log('Server is running on port localhost:' + port)
 		})
 	})
 	.catch(error => {

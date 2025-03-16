@@ -134,7 +134,7 @@ export default class TournamentRepositoryImpl extends TournamentRepository {
 		}
 		return null
 	}
-	async delete(id) {
+	async deleteTournament(id) {
 		const found = await TournamentModel.findByPk(id)
 		if (!found) {
 			throw new Error('Tournament not found')
