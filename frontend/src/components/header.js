@@ -53,7 +53,7 @@ export default function Header() {
           Девлог
         </h2>
         
-        <div className="col-start-12">
+        <div className="col-start-11">
           {isLoggedIn ? (
             <div className="flex items-center space-x-2">
               <span className="text-white text-md">{username}</span>
@@ -77,7 +77,7 @@ export default function Header() {
           ) : (
             <Link 
               href="/login" 
-              className="px-4 py-2 bg-[#f44e1c] hover:bg-[#f5dbbe] hover:text-black text-white rounded-md"
+              className="px-4 py-2 bg-[#FF8D0A] hover:bg-[#f5dbbe] hover:text-black text-white rounded-md"
             >
               Вход
             </Link>

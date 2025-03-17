@@ -21,12 +21,8 @@ export default function Body(){
     },
 ];
 return (
-    <div className="min-h-screen bg-[#0B0B0B] text-white flex flex-col items-center px-[18%] bg-clip-content">
+    <div className=" bg-[#0B0B0B] text-white flex flex-col items-center px-[18%] bg-clip-content">
       <div className="w-full max-w-6xl px-4  py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl text-[#f44e1c]">Турниры</h1>
-          <CreateTournamentButton/>
-        </div>
         <TournamentTable tournaments={tournaments} />
       </div>
     </div>

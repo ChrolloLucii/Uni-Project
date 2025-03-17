@@ -31,10 +31,6 @@ export default function Home() {
       <Header />
       
       <main className="flex-grow">
-        {isLoggedIn && isOrganizer && (
-          <div className="flex justify-end p-4">
-          </div>
-        )}
         
         <Body />
       </main>
