@@ -1,10 +1,46 @@
 services:
-  example:
-    build: /backend
-    image: backend
+
+  db:
+    image: postgres:latest
+    container_name: tournament-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: tournament
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart:
+      always
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    container_name: tournament-backend
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:1234@db:5432/tournament
+      - PORT=4000
+      - NODE_ENV=production
+      - SECRET_KEY=12341234
     ports:
       - "4000:4000"
+    restart: always
   frontend:
-    build: /frontend
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    container_name: tournament-frontend
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://82.202.138.44:4000
+      - BACKEND_URL=http://backend:4000
     ports:
       - "3000:3000"
+    restart: always
+
+volumes:
+  postgres_data:
