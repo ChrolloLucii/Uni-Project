@@ -1,14 +1,15 @@
 
 import { Sequelize } from 'sequelize'
-const databaseUrl = process.env.DATABASE_URL || 'postgres://postgres:1234@db:5432/tournament';
-const sequelize = new Sequelize(databaseUrl, {
-	dialect: 'postgres',
-	logging: false,
-	dialectOptions: {
-	  ssl: process.env.NODE_ENV === 'production' ? {
-		require: true,
-		rejectUnauthorized: false
-	  } : false
+
+const sequelize = new Sequelize(
+	process.env.DB_NAME || 'tournament',
+	process.env.DB_USER || 'postgres',
+	process.env.DB_PASSWORD || '228red228',
+	{
+		host: process.env.DB_HOST || 'localhost',
+		dialect: 'postgres',
+		logging: false,
 	}
-  });
-  export default sequelize;
+)
+
+export default sequelize
