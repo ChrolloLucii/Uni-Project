@@ -1,7 +1,7 @@
 "use client";
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
-
+import { getApiUrl } from '../../config/apiUrl';
 export default function LoginForm({onLogin}){
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -11,7 +11,8 @@ export default function LoginForm({onLogin}){
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:4000/api/auth/login', {
+            const backendUrl = getApiUrl(true);
+            const res = await fetch(`${backendUrl}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

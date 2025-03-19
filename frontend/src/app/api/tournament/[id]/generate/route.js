@@ -1,26 +1,29 @@
-import {NextResponse} from 'next/server';
+import { NextResponse } from 'next/server';
+import { getApiUrl } from '../../../../../../config/apiUrl';
 
-
-export async function POST(request, {params}) {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000' || 'http://example:4000';
-    const { id } = await params;
-    const tournamentId = parseInt(id, 10);
-    
-    try{
-    const res = await fetch(`${backendUrl}/api/tournaments/${tournamentId}/generate-matches`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+export async function POST(request, { params }) {
+  try {
+    const { id } = params;
+    const backendUrl = getApiUrl(false);
+    const response = await fetch(`${backendUrl}/api/tournaments/${id}/generate-matches`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
-    if (!res.ok) {
-        return NextResponse.json({error: 'Error generating matches'}, {status: res.status});
+    if (!response.ok) {
+      throw new Error(`Backend responded with status: ${response.status}`);
     }
+
+    const data = await response.json();
+    return NextResponse.json(data);
     
-    const data = await res.json();
-    return NextResponse.json(data, {status: 200});
-    }
-    catch(error){
-        console.error("Error generating matches", error);
-        return NextResponse.json({error: 'Error generating matches'}, {status: 500});
-    }
+  } catch (error) {
+    console.error('Error generating tournament matches:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to generate tournament matches' },
+      { status: 500 }
+    );
+  }
 }

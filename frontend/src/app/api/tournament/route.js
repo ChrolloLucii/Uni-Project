@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server';
+import { getApiUrl } from '../../../../config/apiUrl';
 export async function GET(request) {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000' || 'http://example:4000';
+    const backendUrl = getApiUrl(false);
 
     const res = await fetch(`${backendUrl}/api/tournaments`);
     if (!res.ok){
@@ -11,7 +12,7 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000' || 'http://example:4000';
+    const backendUrl = getApiUrl(false);
     const data = await request.json();
     const res = await fetch(`${backendUrl}/api/tournaments`, {
         method: 'POST',

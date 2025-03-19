@@ -7,6 +7,7 @@ import GenerateMatchesButton from '@/components/generateMatchesButton';
 import TournamentBracket from '@/components/tournamentBracket';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
+import { getApiUrl } from '../../../../../config/apiUrl';
 function transformMatchesToBracket(tournament) {
   const teams = tournament.teams || [];
   const allMatches = [
@@ -214,7 +215,8 @@ export default function ManageTournamentPage() {
     e.preventDefault();
     console.log("Отправляем данные команды:", newTeam);
     try {
-      const res = await fetch(`http://localhost:4000/api/tournaments/${id}/teams`, {
+      const backendUrl = getApiUrl(true);
+      const res = await fetch(`${backendUrl}/api/tournaments/${id}/teams`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

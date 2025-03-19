@@ -1,10 +1,45 @@
 services:
-  example:
-    build: /backend
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: tournament
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+  backend:
+    build: ./backend
     image: backend
+    restart: always
     ports:
       - "4000:4000"
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: 1234
+      DB_NAME: tournament
+      DB_PORT: 5432
+    depends_on:
+      - db
+    networks:
+      - app-network
   frontend:
-    build: /frontend
+    build: ./frontend
+    image: frontend
+    restart: always
     ports:
       - "3000:3000"
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: "http://localhost:4000"
+    networks:
+      - app-network
+volumes:
+  pgdata:
+networks:
+  app-network:
+    driver: bridge
