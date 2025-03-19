@@ -6,5 +6,5 @@ export const getApiUrl = (isClient = typeof window !== 'undefined') => {
   
   // For server-side requests (Next.js API routes in Docker)
   // Use the service name which Docker DNS will resolve correctly
-  return 'http://backend:4000';
+  return 'http://localhost:4000';
 };
