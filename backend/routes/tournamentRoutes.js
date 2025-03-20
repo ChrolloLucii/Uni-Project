@@ -28,5 +28,6 @@ tournamentRouter.put('/tournaments/:tournamentId/judges', TournamentController.a
 tournamentRouter.delete('/tournaments/:tournamentId',TournamentController.deleteTournament); 
 
 tournamentRouter.get('/tournaments/:tournamentId/teams', TournamentController.getTournamentTeams);
+tournamentRouter.delete('/tournaments/:tournamentId/judges/:judgeId', TournamentController.removeJudge);
 
 export default tournamentRouter;

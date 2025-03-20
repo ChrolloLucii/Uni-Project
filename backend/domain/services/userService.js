@@ -5,7 +5,7 @@
 
 import UserFactory from "../Factories/UserFactory.js"; // импорт фабрики для создания пользователя
 //import UserRepositoryInterface from "../repositories/userRepositoryInterface";
-
+import tournamentServiceInstance from "../../infrastructure/di/TournamentServiceInstance.js";
 
 class UserService {
     constructor(userRepository){
@@ -29,9 +29,31 @@ class UserService {
         return await this.userRepository.update(user);
       }
     
-      async deleteUser(id) {
+    async deleteUser(id) {
+        const user = await this.userRepository.findById(id);
+        if (!user) throw new Error('Пользователь не найден');
+        
+        if (user.role === 'JUDGE') {
+            const allTournaments = await tournamentServiceInstance.getAllTournaments();
+            
+            for (const tournament of allTournaments) {
+                if (Array.isArray(tournament.judges) && 
+                    tournament.judges.some(j => j.id === id || j.id === String(id))) {
+                    
+                    tournament.judges = tournament.judges.filter(j => 
+                        j.id !== id && j.id !== String(id)
+                    );
+                    
+                    await tournamentServiceInstance.updateTournament(
+                        tournament.id, 
+                        { judges: tournament.judges }
+                    );
+                }
+            }
+        }
+        
         return await this.userRepository.delete(id);
-      }
     }
+}
     
     export default UserService;

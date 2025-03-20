@@ -86,7 +86,7 @@ export default function TournamentTable(){
     if (!tournaments.length) {
         return (
             <div className="bg-black bg-opacity-80 rounded-xl p-8 text-center">
-                <Image src="/trophy.svg" width={80} height={80} alt="No tournaments" className="mx-auto mb-4 opacity-30" />
+                <Image src="/dragon-orb-svgrepo-com.svg" width={80} height={80} alt="No tournaments" className="mx-auto mb-4 opacity-30" />
                 <h3 className="text-2xl font-bold text-gray-400">Турниры не найдены</h3>
                 <p className="text-gray-500 mt-2">Создайте новый турнир, чтобы начать</p>
             </div>
@@ -169,10 +169,20 @@ export default function TournamentTable(){
                                     <p className="text-sm text-white font-medium">{tournament.startDate}</p>
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-xs text-gray-500">Организатор</p>
-                                    <p className="text-sm text-white font-medium">
-                                        {tournament.judges?.username || "Не указан"}
-                                    </p>
+                                    <p className="text-xs text-gray-500">Судьи:</p>
+                                    {tournament.judges && tournament.judges.length > 0 ? (
+                                        <div className = "text-sm text-white">
+                                        {tournament.judges.map((judge, index) => (
+                                          <div key = {judge.id || index} className = "font-medium">
+                                            {judge.name || judge.nickname || "Анонимный судья"}
+                                            {index < tournament.judges.length - 1 ? ', ' : ''}
+                                          </div>
+                                        ))}
+                                        </div>
+                                    ) : (
+                                        <p classsName = "text-sm text-gray-400 font-medium"> Не назначен</p>
+                                    )}
+                                    
                                 </div>
                 
                             </div>

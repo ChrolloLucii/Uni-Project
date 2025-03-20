@@ -1,5 +1,5 @@
 import TournamentServiceApp from "../services/tournamentService.js";
-
+import UserModel from "../infrastructure/models/userModel.js";
 const TournamentController = {
 	async createTournament(req, res) {
 		try {
@@ -149,7 +149,21 @@ const TournamentController = {
 	async assignJudge(req, res) {
 		try {
 			const { tournamentId } = req.params
-			const judgeData = req.body
+			const {id} = req.body;
+
+			const judge = await UserModel.findOne({
+				where : {id, role : 'JUDGE'},
+				attributes: ['id', 'username', 'nickname', 'email'] 
+			});
+			if (!judge){
+				return res.status(404).json();
+			}
+			const judgeData = {
+				id : judge.id,
+				name: judge.nickname,
+				email: judge.email
+			};
+
 			const updatedTournament = await TournamentServiceApp.assignJudge(
 				Number(tournamentId),
 				judgeData
@@ -178,7 +192,30 @@ const TournamentController = {
 		catch(error){
 			return res.status(400).json({error: error.message});
 		}
+	},
+	async removeJudge(req,res) {
+		try {
+			const {tournamentId, judgeId} = req.params;
+			const tournament = await TournamentServiceApp.getTournamentById(Number(tournamentId));
+			if (!tournament){
+				return res.status(404).json({error : "Турнир не найден"});
+			}
+			if (!Array.isArray(tournament.judges)){
+				return res.status(200).json(tournament)
+			}
+			const updatedJudges = tournament.judges.filter(judge => judge.id !== judgeId);
+			tournament.judges = updatedJudges;
+			const updatedTournament = await TournamentServiceApp.updateTournament(
+				tournamentId,
+				{judges: updatedJudges}
+			);
+			return res.status(200).json(updatedTournament);
+
+		}
+	 catch(error) {
+		return res.statu(400).json({error: error.message});
 	}
+}
 }
 
 export default TournamentController;
