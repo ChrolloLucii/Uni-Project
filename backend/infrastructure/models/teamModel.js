@@ -4,15 +4,14 @@ import sequelize from '../orm/sequelize.js'
 const TeamModel = sequelize.define(
 	'TeamModel',
 	{
-
-		id_team: {
-			field: 'id_team', 
+		id: {
+			field: 'id_team',
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
 		},
 		name: {
-			field: 'name', 
+			field: 'name',
 			type: DataTypes.STRING(100),
 			allowNull: false,
 		},
@@ -21,14 +20,14 @@ const TeamModel = sequelize.define(
 			type: DataTypes.JSONB,
 			allowNull: true,
 		},
-		rating: {
-			field: 'rating',
-			type: DataTypes.INTEGER,
+		teamRating: {
+			field: 'teamRating',
+			type: DataTypes.FLOAT, 
 			allowNull: true,
 		},
 	},
 	{
-		tableName: 'Team', 
+		tableName: 'Team',
 		timestamps: false,
 	}
 )

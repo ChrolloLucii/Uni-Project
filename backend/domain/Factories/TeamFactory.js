@@ -1,14 +1,16 @@
 import Team from '../entities/Team.js'
 
-import {v4 as uuid} from 'uuid';
-
 export default class TeamFactory {
-  createTeam(data) {
-    return new Team({
-      id: data.id || uuid(),
-      name: data.name,
-      rating: data.rating,
-      players: data.players || []
-    });
-  }
+	/**
+	 * Создает экземпляр команды.
+	 * @param {Object} data
+	 * @param {number|string} [data.id]
+	 * @param {string} data.name 
+	 * @param {Array<Object>} data.players - Массив объектов игроков
+	 * @param {number} [data.captainIndex=0] - Индекс игрока, который будет капитаном
+	 * @returns {Team}
+	 */
+	createTeam({ id, name, players, captainIndex = 0 }) {
+		return new Team({ id, name, players, captainIndex })
+	}
 }
