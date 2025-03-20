@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { hasOrganizerAccess } from '@/utils/authUtil';
-
+import Cookies from 'js-cookie';
 export default function OrganizerDashboard() {
   const router = useRouter();
   const [inviteTokens, setInviteTokens] = useState([]);
@@ -13,7 +13,7 @@ export default function OrganizerDashboard() {
 
   // Проверка авторизации и загрузка данных
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('token');
     if (!token || !hasOrganizerAccess(token)) {
       router.push('/login?redirect=dashboard');
       return;
@@ -61,7 +61,7 @@ export default function OrganizerDashboard() {
 
   const generateToken = () => {
     setLoading(true);
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('token');
     
     fetch('http://localhost:4000/api/organizer/generate-judge-token', {
       method: 'POST',
@@ -97,7 +97,7 @@ export default function OrganizerDashboard() {
   const deleteToken = (id) => {
     if (!confirm('Вы действительно хотите удалить это приглашение?')) return;
 
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('token');
     
     fetch(`http://localhost:4000/api/organizer/judge-tokens/${id}`, {
       method: 'DELETE',

@@ -5,14 +5,14 @@ import Body from "@/components/body";
 import Footer from "@/components/footer";
 import CreateTournamentButton from "@/components/CreateTournamentButton";
 import Link from "next/link";
-
+import Cookies from "js-cookie";
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOrganizer, setIsOrganizer] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
+    const token = Cookies.get("token");
+    const userData = Cookies.get("user");
     
     setIsLoggedIn(!!token);
     

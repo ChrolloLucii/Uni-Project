@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getApiUrl } from '../../../../config/apiUrl';
 
 export default function RegistrationForm() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function RegistrationForm() {
       setError('Недействительная ссылка приглашения');
       return;
     }
-
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/invites/verify-token?token=${token}`)
+    const backendUrl = getApiUrl(true);
+    fetch(`${backendUrl}/api/invites/verify-token?token=${token}`)
       .then(res => {
         if (!res.ok) throw new Error('Токен недействителен или уже использован');
         return res.json();
@@ -52,8 +53,8 @@ export default function RegistrationForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-
-    fetch('http://localhost:4000/api/invites/register-judge', {
+    const backendUrl = getApiUrl(true);
+    fetch(`${backendUrl}/api/invites/register-judge`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, ...formData })

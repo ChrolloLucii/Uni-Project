@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 export default function decodeToken(token){
     try {
         const base64Url = token.split('.')[1];
@@ -18,7 +19,7 @@ export default function decodeToken(token){
 
 export async function hasOrganizerAccess(){
     try {
-        const token = localStorage.getItem('token');
+        const token = Cookies.get('token');
         if (!token) return false;
         
         // Проверяем доступ через API

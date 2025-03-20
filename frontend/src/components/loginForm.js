@@ -2,6 +2,7 @@
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import { getApiUrl } from '../../config/apiUrl';
+import Cookies from 'js-cookie'
 export default function LoginForm({onLogin}){
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -22,8 +23,8 @@ export default function LoginForm({onLogin}){
     
             if (res.status === 200) {
                 const data = await res.json();
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
+                Cookies.set('token', data.token, { expires: 1, secure: true, sameSite: 'strict' });
+                Cookies.set('user', JSON.stringify(data.user), { expires: 1, secure: true, sameSite: 'strict' });
                 
                 // Используем onLogin вместо setLoggedIn
                 if (onLogin) onLogin(data.token);
