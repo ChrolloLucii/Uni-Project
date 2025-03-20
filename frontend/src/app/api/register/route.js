@@ -3,7 +3,7 @@ import {NextResponse} from 'next/server';
 export async function POST(request){
     try{
     const registerPayload = await request.json();
-    const backendUrl = getApiUrl(true);
+    const backendUrl = getApiUrl(false);
     const response = await fetch(`${backendUrl}/auth/register`, {
         method: 'POST',
         headers: {
